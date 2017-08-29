@@ -4,7 +4,7 @@ class MonitorManager:
         self.monitorHosts = dict()
         self.targetwidth = 1920
 
-        self.addMonitor(1, 0, 0, 1280, 1024, "10.128.128.20")
+        self.addMonitor(1, 0, 0, 1280, 1024, "10.128.9.86")
         self.addMonitor(2, 1280, 0, 1280, 1024, "10.128.128.21")
         self.addMonitor(3, 2560, 0, 1280, 1024, "10.128.128.21")
 
