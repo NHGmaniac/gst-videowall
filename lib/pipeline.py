@@ -41,6 +41,7 @@ class Pipeline(object):
         t. 
         ! queue
         ! videocrop left={left} top={top} right={right} bottom={bottom}
+        ! videoscale add-borders=false
         ! video/x-raw, width={width}, height={height} 
         ! x264enc tune=fastdecode speed-preset={speed} 
         ! rtph264pay 
