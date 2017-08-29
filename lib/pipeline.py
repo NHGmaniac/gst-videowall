@@ -17,9 +17,9 @@ class Pipeline(object):
         pipelineTemplate = """
         rtpbin name=rtpbin 
         
-        filesrc location=res/gits1.mp4
+        filesrc location=res/psychill.mp4
         ! decodebin
-        ! videobox autocrop=true 
+        ! videoscale
         ! video/x-raw, width={width}, height={height} 
         ! tee name=t 
         ! queue 
@@ -40,8 +40,7 @@ class Pipeline(object):
         monitorTemplate = """
         t. 
         ! queue
-        ! videocrop left={left} top={top} right={right} bottom={bottom} 
-        ! videoscale 
+        ! videocrop left={left} top={top} right={right} bottom={bottom}
         ! video/x-raw, width={width}, height={height} 
         ! x264enc tune=fastdecode speed-preset={speed} 
         ! rtph264pay 
@@ -59,7 +58,7 @@ class Pipeline(object):
         pipeline = pipelineTemplate.format(width=self.mm.getRenderTargetScreen()[0],
                                            height=self.mm.getRenderTargetScreen()[1],
                                            speed=self.speed,
-                                           preview_host="10.128.128.22",
+                                           preview_host="10.128.9.54",
                                            preview_rtp_port="10000",
                                            preview_rtcp_send_port="20000",
                                            preview_rtcp_recv_port="30000")

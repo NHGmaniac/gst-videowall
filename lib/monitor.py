@@ -5,8 +5,14 @@ class MonitorManager:
         self.targetwidth = 1920
 
         self.addMonitor(1, 0, 0, 1280, 1024, "10.128.9.86")
-        self.addMonitor(2, 1280, 0, 1280, 1024, "10.128.128.21")
-        self.addMonitor(3, 2560, 0, 1280, 1024, "10.128.128.21")
+        self.addMonitor(2, 1280, 0, 1280, 1024, "10.128.9.106")
+        self.addMonitor(3, 0, 1024, 1280, 1024, "10.128.9.27")
+        self.addMonitor(4, 1280, 1024, 1280, 1024, "10.128.10.1")
+        # self.addMonitor(5, 1280, 1024, 1280, 1024, "10.128.10.1")
+        #        self.addMonitor(6, 2560, 1024, 1280, 1024, "10.128.10.1")                                                     #
+        #        self.addMonitor(7, 0, 2048, 1280, 1024, "10.128.10.1")
+        #        self.addMonitor(8, 1280, 2048, 1280, 1024, "10.128.10.1")
+        #        self.addMonitor(9, 2560, 2048, 1280, 1024, "10.128.10.1")
 
     def addMonitor(self, id, x, y, w, h, host):
         self.monitors[id] = (x, y, w, h)
