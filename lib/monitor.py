@@ -6,7 +6,7 @@ class MonitorManager:
     def __init__(self):
         self.monitors = dict()
         self.monitorHosts = dict()
-        self.targetwidth = 1920
+        self.targetwidth = 800
 
         # self.addMonitor(1, 0, 0, 1280, 1024, "10.128.9.86")
         # self.addMonitor(2, 1280, 0, 1280, 1024, "10.128.9.106")
