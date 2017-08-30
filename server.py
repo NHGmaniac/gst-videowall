@@ -41,9 +41,9 @@ class auto_configure_RequestHandler(http.server.BaseHTTPRequestHandler):
             self.send_error(418, "I'm a teapot")
             return
         ip = self.client_address
+        ip = ip[1]
         if "X-Real-IP" in self.headers:
             ip = self.headers["X-Real-IP"]
-        ip = ip[1]
         client_id = add_device(mac, ip)
 
         # Send headers
