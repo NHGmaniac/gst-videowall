@@ -4,8 +4,6 @@ import gi, signal, logging, sys
 # import GStreamer and GLib-Helper classes
 gi.require_version('Gst', '1.0')
 from gi.repository import Gst, GObject
-import threading
-import http.server
 
 # check min-version
 minGst = (1, 0)
@@ -30,10 +28,6 @@ from lib.mainloop import MainLoop
 
 # main class
 class SyncStream(object):
-    macMapping = {
-        "aa:bb:cc:dd:ee:ff": (0, 0, 1280, 1024)
-    }
-    hostAddress = "10.128.9.47"
     def __init__(self):
         self.log = logging.getLogger('SyncStream')
 
@@ -52,61 +46,9 @@ class SyncStream(object):
         except KeyboardInterrupt:
             self.log.info('Terminated via Ctrl-C')
 
-    def add_device(self, mac, ip):
-        id = len(self.pipeline.mm.monitors) + 1
-        self.pipeline.mm.addMonitor(id, *self.macMapping[mac], ip)
-        self.pipeline.restart()
-        MainLoop.quit()
-        return id
-
     def quit(self):
         self.log.info('quitting GObject-MainLoop')
         MainLoop.quit()
-
-
-from http.server import BaseHTTPRequestHandler, HTTPServer
-
-
-def createHandler(syncstream):
-    class auto_configure_RequestHandler(BaseHTTPRequestHandler):
-        # GET
-        def do_GET(self):
-            # Send response status code
-            self.send_response(200)
-
-            mac = self.path
-            if not mac or len(mac) is not 18:
-                self.send_error(418, "I'm a teapot")
-                return
-            mac = mac[1:]
-            if mac not in syncstream.macMapping:
-                self.send_error(418, "I'm a teapot")
-                return
-            ip = self.client_address
-            client_id = syncstream.add_device(mac, ip)
-
-            # Send headers
-            self.send_header('Content-type', 'text/html')
-            self.end_headers()
-
-            # Send message back to client
-            # Write content as utf-8 data
-            self.wfile.write(bytes("{} {}".format(client_id, syncstream.hostAddress), "utf8"))
-            return
-
-    return auto_configure_RequestHandler
-
-
-def run_server(syncstream):
-    logging.getLogger('ConfigServer').info('starting server...')
-
-    # Server settings
-    # Choose port 8080, for port 80, which is normally used for a http server, you need root access
-    server_address = (syncstream.hostAddress, 8081)
-    httpd = HTTPServer(server_address, createHandler(syncstream))
-    logging.getLogger('ConfigServer').info('running server...')
-    httpd.serve_forever()
-
 
 # run mainclass
 def main():
@@ -136,10 +78,6 @@ def main():
     # init main-class and main-loop
     logging.debug('initializing SyncStream')
     syncstream = SyncStream()
-
-    server = threading.Thread(target=run_server, args=(syncstream,))
-    server.daemon = True
-    server.start()
 
     logging.debug('running SyncStream')
     syncstream.run()

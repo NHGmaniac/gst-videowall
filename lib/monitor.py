@@ -1,3 +1,7 @@
+import json
+import os
+
+
 class MonitorManager:
     def __init__(self):
         self.monitors = dict()
@@ -46,6 +50,19 @@ class MonitorManager:
     def getMonitorSize(self, id):
         return self.monitors[id][2], self.monitors[id][3]
 
+    def save(self):
+        if not os.path.exists("./config"):
+            os.mkdir("./config")
+        with open("config/monitors") as f:
+            json.dump(self.monitors,f)
+        with open("config/monitorHosts") as f:
+            json.dump(self.monitorHosts,f)
+
+    def load(self):
+        with open("config/monitors") as f:
+            self.monitors = json.load(f)
+        with open("config/monitorHosts") as f:
+            self.monitorHosts = json.load(f)
 
 if __name__ == '__main__':
     mm = MonitorManager()
