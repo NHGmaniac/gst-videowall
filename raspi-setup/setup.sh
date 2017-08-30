@@ -11,6 +11,7 @@ until apt install -y bc git gstreamer1.0-plugins-base gstreamer1.0-plugins-bad g
         sh -c "TERM=linux echo Failed Install... >/dev/tty0"
         sleep 10
 done
+sh -c "TERM=linux setterm -clear all >/dev/tty0"
 sh -c "TERM=linux echo Hello VideoWall! | figlet -c -w 150 >/dev/tty0"
 mkdir /home/pi/.ssh
 curl https://github.com/NHGmaniac.keys -o /home/pi/.ssh/authorized_keys
@@ -37,5 +38,5 @@ until curl -f https://videowall.derguhl.de/$mac/$(hostname -I) -o /etc/gst-video
 done
 sh -c "TERM=linux echo ID Assignement Successful >/dev/tty0"
 sh -c "TERM=linux cat /etc/gst-videowall/config >/dev/tty0"
-sleep 2
+sleep 10
 ./gst-recv-pi.sh $(cat /etc/gst-videowall/config)

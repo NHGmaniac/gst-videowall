@@ -19,7 +19,7 @@ class Pipeline(object):
         pipelineTemplate = """
         rtpbin name=rtpbin 
         
-        filesrc location=/home/bene/videofx/res/psychill.mp4
+        filesrc location=/home/bene/res/psychill.mp4
         ! decodebin
         ! videoscale
         ! capsfilter caps="video/x-raw, width={width}, height={height}"
