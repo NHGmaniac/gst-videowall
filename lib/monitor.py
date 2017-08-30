@@ -23,10 +23,10 @@ class MonitorManager:
         self.monitorHosts.pop(id)
 
     def getTotalWidth(self):
-        return max(map(lambda x: x[0] + x[2], self.monitors.values()))
+        return 1920 if len(self.monitors) is 0 else max(map(lambda x: x[0] + x[2], self.monitors.values()))
 
     def getTotalHeight(self):
-        return max(map(lambda x: x[1] + x[3], self.monitors.values()))
+        return 1080 if len(self.monitors) is 0 else max(map(lambda x: x[1] + x[3], self.monitors.values()))
 
     def getRenderTargetScreen(self):
         w = self.targetwidth
