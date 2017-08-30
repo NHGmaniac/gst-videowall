@@ -53,9 +53,9 @@ class MonitorManager:
     def save(self):
         if not os.path.exists("./config"):
             os.mkdir("./config")
-        with open("config/monitors") as f:
+        with open("config/monitors","w") as f:
             json.dump(self.monitors,f)
-        with open("config/monitorHosts") as f:
+        with open("config/monitorHosts","") as f:
             json.dump(self.monitorHosts,f)
 
     def load(self):
