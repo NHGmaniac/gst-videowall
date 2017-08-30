@@ -18,16 +18,25 @@ class MonitorManager:
         #        self.addMonitor(8, 1280, 2048, 1280, 1024, "10.128.10.1")
         #        self.addMonitor(9, 2560, 2048, 1280, 1024, "10.128.10.1")
 
-    def addMonitor(self, id, x, y, w, h, host):
+    def addMonitor(self, id, x, y, w, h, mac, ip):
         self.monitors[id] = (x, y, w, h)
-        self.monitorHosts[id] = host
+        self.monitorHosts[id] = (mac, ip)
+
+    def replaceMonitor(self, mac, ip):
+        for id, host in self.monitorHosts.items():
+            if host[0] == mac:
+                host[1] = ip
+                return id
 
     def delMonitor(self, id):
         self.monitors.pop(id)
         self.monitorHosts.pop(id)
 
     def hasMonitor(self, host):
-        return host in self.monitorHosts.values()
+        for host in self.monitorHosts:
+            if host[0] == host or host[1] == host:
+                return True
+        return False
 
     def getTotalWidth(self):
         return 1920 if len(self.monitors) is 0 else max(map(lambda x: x[0] + x[2], self.monitors.values()))
