@@ -28,7 +28,7 @@ cd gst-videowall
 sh -c "TERM=linux echo Setup Completed | figlet -c -w 150 >/dev/tty0"
 sh -c "TERM=linux hostname -I | figlet -c -w 150 -W >/dev/tty0"
 mac=$(cat /sys/class/net/$(ip route show default | awk '/default/ {print $5}')/address)
-sh -c "TERM=linux $mac | figlet -c -w 150 -W >/dev/tty0"
+sh -c "TERM=linux echo $mac | figlet -c -w 150 -W >/dev/tty0"
 resp=$(curl https://videowall.derguhl.de/$mac/$(hostname -I))
 until not echo $resp | grep "Error"; do
     sh -c "TERM=linux echo ID Assignement Failed, retrying... >/dev/tty0"
