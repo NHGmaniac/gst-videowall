@@ -34,18 +34,16 @@ class auto_configure_RequestHandler(http.server.BaseHTTPRequestHandler):
         # Send response status code
         self.send_response(200)
 
-        mac = self.path
-        if not mac or len(mac) is not 18:
+        data = self.path
+        if not data:
             self.send_error(418, "I'm a teapot")
             return
-        mac = mac[1:]
-        if mac not in macMapping:
+        data = data.split("/")
+        if not len(data) == 3 or len(data[1]) != 17:
             self.send_error(418, "I'm a teapot")
             return
-        ip = self.client_address
-        ip = ip[1]
-        if "X-Real-IP" in self.headers:
-            ip = self.headers["X-Real-IP"]
+        mac = data[1]
+        ip = data[2]
         client_id = add_device(mac, ip)
         if client_id is None:
             self.send_error(418, "I'm a teapot")
