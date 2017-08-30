@@ -20,7 +20,7 @@ class MonitorManager:
 
     def addMonitor(self, id, x, y, w, h, mac, ip):
         self.monitors[id] = (x, y, w, h)
-        self.monitorHosts[id] = (mac, ip)
+        self.monitorHosts[id] = [mac, ip]
 
     def replaceMonitor(self, mac, ip):
         for id, host in self.monitorHosts.items():
