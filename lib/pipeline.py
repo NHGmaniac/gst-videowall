@@ -20,7 +20,7 @@ class Pipeline(object):
         filesrc location=/home/bene/videofx/res/psychill.mp4
         ! decodebin
         ! videoscale
-        ! capsfilter caps="video/x-raw, width={width}, height={height}" 
+        ! capsfilter caps="video/x-raw, width={width}, height={height}"
         ! tee name=t 
         ! queue 
         ! x264enc tune=fastdecode speed-preset={speed} 
@@ -41,8 +41,6 @@ class Pipeline(object):
         t. 
         ! queue
         ! videocrop left={left} top={top} right={right} bottom={bottom}
-        ! videoscale add-borders=false
-        ! video/x-raw, width={width}, height={height} 
         ! x264enc tune=fastdecode speed-preset={speed} 
         ! rtph264pay 
         ! rtpbin.send_rtp_sink_{id}
