@@ -8,10 +8,10 @@ class MonitorManager:
         self.monitorHosts = dict()
         self.targetwidth = 2560
 
-        #self.addMonitor(1, 0, 0, 1280, 1024, "10.128.9.86")
-        #self.addMonitor(2, 1280, 0, 1280, 1024, "10.128.9.106")
-        #self.addMonitor(3, 0, 1024, 1280, 1024, "10.128.9.27")
-        #self.addMonitor(4, 1280, 1024, 1280, 1024, "10.128.9.26")
+        # self.addMonitor(1, 0, 0, 1280, 1024, "10.128.9.86")
+        # self.addMonitor(2, 1280, 0, 1280, 1024, "10.128.9.106")
+        # self.addMonitor(3, 0, 1024, 1280, 1024, "10.128.9.27")
+        # self.addMonitor(4, 1280, 1024, 1280, 1024, "10.128.9.26")
         # self.addMonitor(5, 1280, 1024, 1280, 1024, "10.128.10.1")
         #        self.addMonitor(6, 2560, 1024, 1280, 1024, "10.128.10.1")                                                     #
         #        self.addMonitor(7, 0, 2048, 1280, 1024, "10.128.10.1")
@@ -43,8 +43,10 @@ class MonitorManager:
     def getMonitorCropRect(self, id):
         l = self.lerp(self.monitors[id][0], self.getTotalWidth(), self.getRenderTargetScreen()[0])
         t = self.lerp(self.monitors[id][1], self.getTotalHeight(), self.getRenderTargetScreen()[1])
-        r = self.getRenderTargetScreen()[0] - self.lerp(self.monitors[id][0] + self.monitors[id][2], self.getTotalWidth(), self.getRenderTargetScreen()[0])
-        b = self.getRenderTargetScreen()[1] - self.lerp(self.monitors[id][1] + self.monitors[id][3], self.getTotalHeight(), self.getRenderTargetScreen()[1])
+        r = self.getRenderTargetScreen()[0] - self.lerp(self.monitors[id][0] + self.monitors[id][2],
+                                                        self.getTotalWidth(), self.getRenderTargetScreen()[0])
+        b = self.getRenderTargetScreen()[1] - self.lerp(self.monitors[id][1] + self.monitors[id][3],
+                                                        self.getTotalHeight(), self.getRenderTargetScreen()[1])
         return l, t, r, b
 
     def getMonitorSize(self, id):
@@ -53,16 +55,20 @@ class MonitorManager:
     def save(self):
         if not os.path.exists("./config"):
             os.mkdir("./config")
-        with open("config/monitors","w") as f:
-            json.dump(self.monitors,f)
-        with open("config/monitorHosts","") as f:
-            json.dump(self.monitorHosts,f)
+        with open("./config/monitors", "w") as f:
+            json.dump(self.monitors, f)
+        with open("./config/monitorHosts", "w") as f:
+            json.dump(self.monitorHosts, f)
 
     def load(self):
-        with open("config/monitors") as f:
-            self.monitors = json.load(f)
-        with open("config/monitorHosts") as f:
-            self.monitorHosts = json.load(f)
+        with open("./config/monitors") as f:
+            data = json.load(f)
+            self.monitors = {int(k): v for k, v in data}
+
+        with open("./config/monitorHosts") as f:
+            data = json.load(f)
+            self.monitorHosts = {int(k): v for k, v in data}
+
 
 if __name__ == '__main__':
     mm = MonitorManager()
