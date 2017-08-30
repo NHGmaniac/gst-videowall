@@ -44,6 +44,10 @@ class auto_configure_RequestHandler(http.server.BaseHTTPRequestHandler):
             return
         mac = data[1]
         ip = data[2]
+        if mac not in macMapping.keys():
+            self.send_error(418, "I'm a teapot")
+            return
+
         client_id = add_device(mac, ip)
         if client_id is None:
             self.send_error(418, "I'm a teapot")
