@@ -32,9 +32,9 @@ class MonitorManager:
         self.monitors.pop(id)
         self.monitorHosts.pop(id)
 
-    def hasMonitor(self, addr):
+    def hasMonitor(self, mac):
         for host in self.monitorHosts.values():
-            if host[0] == addr or host[1] == addr:
+            if host[0] == mac:
                 return True
         return False
 
