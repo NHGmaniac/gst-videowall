@@ -25,7 +25,7 @@ class MonitorManager:
     def replaceMonitor(self, mac, ip):
         for id, host in self.monitorHosts.items():
             if host[0] == mac:
-                host[1] = ip
+                self.monitorHosts[id][1] = ip
                 return id
 
     def delMonitor(self, id):
