@@ -1,0 +1,10 @@
+[Unit]
+Description = raspi-setup
+After = network.target
+
+[Service]
+Type = simple
+ExecStart = /usr/share/raspi-setup/setup.sh
+
+[Install]
+WantedBy = multi-user.target
