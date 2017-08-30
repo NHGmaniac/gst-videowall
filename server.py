@@ -8,7 +8,8 @@ from lib.monitor import MonitorManager
 
 macMapping = {
     "aa:bb:cc:dd:ee:ff": (0, 0, 1280, 1024),
-    "b8:27:eb:04:bf:2a": (1280, 0, 1280, 1024)
+    "b8:27:eb:04:bf:2a": (1280, 0, 1280, 1024),
+    "b8:27:eb:1b:99:2e": (1280, 0, 1280, 1024)
 }
 hostAddress = "10.128.9.47"
 monitorManager = MonitorManager()

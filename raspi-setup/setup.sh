@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 sh -c "TERM=linux echo Starting Setup... >/dev/tty0"
 sh -c "TERM=linux setterm -blank 0 >/dev/tty0"
+sh -c "TERM=linux setterm -clear all >/dev/tty0"
 until apt update; do
         sh -c "TERM=linux echo update failed... >/dev/tty0"
         sleep 10
@@ -35,6 +36,6 @@ until curl -f https://videowall.derguhl.de/$mac/$(hostname -I) -o /etc/gst-video
     sleep 10
 done
 sh -c "TERM=linux echo ID Assignement Successful >/dev/tty0"
-sh -c "TERM=linux cat /etc/gst-videowall/config | figlet -c -w 150 -W >/dev/tty0"
+sh -c "TERM=linux cat /etc/gst-videowall/config >/dev/tty0"
 sleep 2
 ./gst-recv-pi.sh $(cat /etc/gst-videowall/config)
