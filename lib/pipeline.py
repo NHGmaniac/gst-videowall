@@ -20,7 +20,7 @@ class Pipeline(object):
         filesrc location=res/psychill.mp4
         ! decodebin
         ! videoscale
-        ! video/x-raw, width={width}, height={height} 
+        ! capsfilter caps="video/x-raw, width={width}, height={height}" 
         ! tee name=t 
         ! queue 
         ! x264enc tune=fastdecode speed-preset={speed} 
