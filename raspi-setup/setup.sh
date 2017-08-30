@@ -2,6 +2,7 @@
 sh -c "TERM=linux setterm -blank 0 >/dev/tty0"
 sh -c "TERM=linux setterm -clear all >/dev/tty0"
 sh -c "TERM=linux echo Starting Setup... >/dev/tty0"
+sh -c "TERM=linux hostname -I >/dev/tty0"
 until apt update; do
         sh -c "TERM=linux echo update failed... >/dev/tty0"
         sleep 10
