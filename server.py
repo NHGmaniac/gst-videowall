@@ -7,7 +7,8 @@ from lib.args import Args
 from lib.monitor import MonitorManager
 
 macMapping = {
-    "aa:bb:cc:dd:ee:ff": (0, 0, 1280, 1024)
+    "aa:bb:cc:dd:ee:ff": (0, 0, 1280, 1024),
+    "b8:27:eb:04:bf:2a": (1280, 0, 1280, 1024)
 }
 hostAddress = "10.128.9.47"
 monitorManager = MonitorManager()
@@ -31,27 +32,28 @@ def startProcess():
 class auto_configure_RequestHandler(http.server.BaseHTTPRequestHandler):
     # GET
     def do_GET(self):
-        # Send response status code
-        self.send_response(200)
+
 
         data = self.path
         if not data:
-            self.send_error(418, "I'm a teapot")
+            self.send_response(418, "I'm a teapot")
             return
         data = data.split("/")
         if not len(data) == 3 or len(data[1]) != 17:
-            self.send_error(418, "I'm a teapot")
+            self.send_response(418, "I'm a teapot")
             return
         mac = data[1]
         ip = data[2]
         if mac not in macMapping.keys():
-            self.send_error(418, "I'm a teapot")
+            self.send_response(418, "I'm a teapot")
             return
 
         client_id = add_device(mac, ip)
         if client_id is None:
-            self.send_error(418, "I'm a teapot")
+            self.send_response(418, "I'm a teapot")
             return
+
+        self.send_response(200, "OK")
 
         # Send headers
         self.send_header('Content-type', 'text/html')
