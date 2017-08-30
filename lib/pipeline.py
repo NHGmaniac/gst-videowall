@@ -14,6 +14,7 @@ class Pipeline(object):
         self.speed = "fast"
 
     def configure(self):
+        self.pipeline = None
         pipelineTemplate = """
         rtpbin name=rtpbin 
         
@@ -81,3 +82,12 @@ class Pipeline(object):
     def start(self):
         self.log.info('Starting Pipeline')
         self.pipeline.set_state(Gst.State.PLAYING)
+
+    def stop(self):
+        self.log.info('Stopping Pipeline')
+        self.pipeline.set_state(Gst.State.NULL)
+
+    def restart(self):
+        self.stop()
+        self.configure()
+        self.start()
