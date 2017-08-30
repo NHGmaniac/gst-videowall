@@ -9,7 +9,7 @@ from lib.monitor import MonitorManager
 macMapping = {
     "aa:bb:cc:dd:ee:ff": (0, 0, 1280, 1024)
 }
-hostAddress = "127.0.0.1"#"10.128.9.47"
+hostAddress = "10.128.9.47"
 monitorManager = MonitorManager()
 syncstream = None
 
