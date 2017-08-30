@@ -21,14 +21,16 @@ else
     git pull
 fi
 cp raspi-setup/setup.sh /usr/share/raspi-setup
+chmod +x /usr/share/raspi-setup/setup.sh
 
 cd gst-videowall
 sh -c "TERM=linux echo Setup Completed | figlet -c -w 150 >/dev/tty0"
 sh -c "TERM=linux hostname -I | figlet -c -w 150 -W >/dev/tty0"
 mac=$(cat /sys/class/net/$(ip route show default | awk '/default/ {print $5}')/address)
 sh -c "TERM=linux $mac | figlet -c -w 150 -W >/dev/tty0"
-curl https://videowall.derguhl.de/$mac -o /etc/gst-videowall/config
+curl https://videowall.derguhl.de/$mac/$(hostname -I) -o /etc/gst-videowall/config
 id=$(cat /etc/gst-videowall/id)
 host=$(cat /etc/gst-videowall/host)
 sh -c "TERM=linux echo \"$id : $host\" | figlet -c -w 150 -W >/dev/tty0"
+sleep 2
 ./gst-recv-pi.sh $id $host
