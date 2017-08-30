@@ -46,8 +46,9 @@ class SyncStream(object):
         self.pipeline.start()
 
         try:
-            self.log.info('running GObject-MainLoop')
-            MainLoop.run()
+            while True:
+                self.log.info('running GObject-MainLoop')
+                MainLoop.run()
         except KeyboardInterrupt:
             self.log.info('Terminated via Ctrl-C')
 
@@ -55,6 +56,7 @@ class SyncStream(object):
         id = len(self.pipeline.mm.monitors) + 1
         self.pipeline.mm.addMonitor(id, *self.macMapping[mac], ip)
         self.pipeline.restart()
+        MainLoop.quit()
         return id
 
     def quit(self):
