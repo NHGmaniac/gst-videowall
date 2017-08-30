@@ -33,6 +33,7 @@ class SyncStream(object):
     macMapping = {
         "aa:bb:cc:dd:ee:ff": (0, 0, 1280, 1024)
     }
+    hostAddress = "10.128.9.47"
     def __init__(self):
         self.log = logging.getLogger('SyncStream')
 
@@ -76,7 +77,7 @@ def createHandler(syncstream):
                 self.send_error(418, "I'm a teapot")
                 return
             mac = mac[1:]
-            if mac not in macMapping:
+            if mac not in syncstream.macMapping:
                 self.send_error(418, "I'm a teapot")
                 return
             ip = self.client_address
@@ -88,7 +89,7 @@ def createHandler(syncstream):
 
             # Send message back to client
             # Write content as utf-8 data
-            self.wfile.write(bytes("{} {}".format(client_id, self.address_string()), "utf8"))
+            self.wfile.write(bytes("{} {}".format(client_id, syncstream.hostAddress), "utf8"))
             return
 
     return auto_configure_RequestHandler
