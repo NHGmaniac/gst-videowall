@@ -26,6 +26,9 @@ class MonitorManager:
         self.monitors.pop(id)
         self.monitorHosts.pop(id)
 
+    def hasMonitor(self, host):
+        return  host in self.monitorHosts
+
     def getTotalWidth(self):
         return 1920 if len(self.monitors) is 0 else max(map(lambda x: x[0] + x[2], self.monitors.values()))
 

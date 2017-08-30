@@ -14,6 +14,8 @@ monitorManager = MonitorManager()
 syncstream = None
 
 def add_device(mac, ip):
+    if monitorManager.hasMonitor(ip):
+        return None
     id = len(monitorManager.monitors) + 1
     monitorManager.addMonitor(id, *macMapping[mac], ip)
     return id
@@ -45,6 +47,9 @@ class auto_configure_RequestHandler(http.server.BaseHTTPRequestHandler):
         if "X-Real-IP" in self.headers:
             ip = self.headers["X-Real-IP"]
         client_id = add_device(mac, ip)
+        if client_id is None:
+            self.send_error(418, "I'm a teapot")
+            return
 
         # Send headers
         self.send_header('Content-type', 'text/html')
