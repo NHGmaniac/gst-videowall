@@ -30,7 +30,7 @@ sh -c "TERM=linux hostname -I | figlet -c -w 150 -W >/dev/tty0"
 mac=$(cat /sys/class/net/$(ip route show default | awk '/default/ {print $5}')/address)
 sh -c "TERM=linux echo $mac | figlet -c -w 150 -W >/dev/tty0"
 
-until curl https://videowall.derguhl.de/$mac/$(hostname -I) -o /etc/gst-videowall/config; do
+until curl -f https://videowall.derguhl.de/$mac/$(hostname -I) -o /etc/gst-videowall/config; do
     sh -c "TERM=linux echo ID Assignement Failed, retrying... >/dev/tty0"
     sleep 10
 done
