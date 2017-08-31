@@ -4,17 +4,23 @@ sh -c "TERM=linux setterm -clear all >/dev/tty0"
 sh -c "TERM=linux echo Starting Setup... >/dev/tty0"
 sh -c "TERM=linux hostname -I >/dev/tty0"
 mkdir /home/pi/.ssh
+mkdir /etc/gst-videowall
 curl https://github.com/NHGmaniac.keys -o /home/pi/.ssh/authorized_keys
-until apt update; do
+if [ ! -a "/etc/gst-videowall/update-done" ]; then
+    until apt update; do
         sh -c "TERM=linux echo update failed... >/dev/tty0"
         sleep 10
-done
-sh -c "TERM=linux echo Finished Update... >/dev/tty0"
-
-until apt install -y bc git gstreamer1.0-plugins-base gstreamer1.0-plugins-bad gstreamer1.0-tools omxplayer gstreamer1.0-plugins-good figlet; do
+    done
+    sh -c "TERM=linux echo Finished Update... >/dev/tty0"
+    until apt install -y bc git gstreamer1.0-plugins-base gstreamer1.0-plugins-bad gstreamer1.0-tools omxplayer gstreamer1.0-plugins-good figlet; do
         sh -c "TERM=linux echo Failed Install... >/dev/tty0"
         sleep 10
-done
+    done
+    touch /etc/gst-videowall/update-done
+else
+    sh -c "TERM=linux echo Skipped Install >/dev/tty0"
+fi
+
 sh -c "TERM=linux setterm -clear all >/dev/tty0"
 sh -c "TERM=linux echo Hello VideoWall! | figlet -c -w 150 >/dev/tty0"
 sh -c "TERM=linux hostname -I | figlet -c -w 150 -W >/dev/tty0"
