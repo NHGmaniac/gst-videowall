@@ -26,7 +26,12 @@ if [ ! -d "gst-videowall" ]; then
     cd gst-videowall
 else
     cd gst-videowall
-    git pull
+    if ! git pull; then
+        cd ..
+        rm -rf gst-videowall
+        git clone https://github.com/NHGmaniac/gst-videowall
+        cd gst-videowall
+    fi
 fi
 
 cd gst-videowall
