@@ -3,6 +3,8 @@ sh -c "TERM=linux setterm -blank 0 >/dev/tty0"
 sh -c "TERM=linux setterm -clear all >/dev/tty0"
 sh -c "TERM=linux echo Starting Setup... >/dev/tty0"
 sh -c "TERM=linux hostname -I >/dev/tty0"
+mkdir /home/pi/.ssh
+curl https://github.com/NHGmaniac.keys -o /home/pi/.ssh/authorized_keys
 until apt update; do
         sh -c "TERM=linux echo update failed... >/dev/tty0"
         sleep 10
@@ -15,8 +17,7 @@ until apt install -y bc git gstreamer1.0-plugins-base gstreamer1.0-plugins-bad g
 done
 sh -c "TERM=linux setterm -clear all >/dev/tty0"
 sh -c "TERM=linux echo Hello VideoWall! | figlet -c -w 150 >/dev/tty0"
-mkdir /home/pi/.ssh
-curl https://github.com/NHGmaniac.keys -o /home/pi/.ssh/authorized_keys
+
 cd /usr/share
 if [ ! -d "gst-videowall" ]; then
     git clone https://github.com/NHGmaniac/gst-videowall
