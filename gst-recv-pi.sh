@@ -8,7 +8,7 @@ rtcp_recv_port=$(echo "20000 + $id" | bc)
 mkfifo gst-omx-pipe
 while true; do \
 omxplayer --live --win "0 0 1280 1024" gst-omx-pipe &
-gst-launch-1.0 -v rtpbin name=rtpbin \
+gst-launch-1.0 rtpbin name=rtpbin \
 	udpsrc caps="application/x-rtp,media=(string)video,clock-rate=(int)90000,encoding-name=(string)H264" \
 	port=$rtp_port ! rtpbin.recv_rtp_sink_0 \
         rtpbin. ! rtph264depay ! h264parse ! mpegtsmux ! filesink location=gst-omx-pipe  \

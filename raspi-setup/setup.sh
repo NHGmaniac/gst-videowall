@@ -17,6 +17,9 @@ until apt install -y bc git gstreamer1.0-plugins-base gstreamer1.0-plugins-bad g
 done
 sh -c "TERM=linux setterm -clear all >/dev/tty0"
 sh -c "TERM=linux echo Hello VideoWall! | figlet -c -w 150 >/dev/tty0"
+sh -c "TERM=linux hostname -I | figlet -c -w 150 -W >/dev/tty0"
+mac=$(cat /sys/class/net/$(ip route show default | awk '/default/ {print $5}')/address)
+sh -c "TERM=linux echo $mac | figlet -c -w 150 -W >/dev/tty0"
 
 cd /usr/share
 if [ ! -d "gst-videowall" ]; then
@@ -31,9 +34,7 @@ chmod +x /usr/share/raspi-setup/setup.sh
 
 cd gst-videowall
 sh -c "TERM=linux echo Setup Completed | figlet -c -w 150 >/dev/tty0"
-sh -c "TERM=linux hostname -I | figlet -c -w 150 -W >/dev/tty0"
-mac=$(cat /sys/class/net/$(ip route show default | awk '/default/ {print $5}')/address)
-sh -c "TERM=linux echo $mac | figlet -c -w 150 -W >/dev/tty0"
+
 
 until curl -f https://videowall.derguhl.de/$mac/$(hostname -I) -o /etc/gst-videowall/config; do
     sh -c "TERM=linux echo ID Assignement Failed, retrying... >/dev/tty0"

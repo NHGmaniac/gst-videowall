@@ -15,7 +15,10 @@ macMapping = {
 }
 hostAddress = "10.128.9.47"
 monitorManager = MonitorManager()
+monitorManager.load()
+
 syncstream = None
+
 
 def add_device(mac, ip):
     if monitorManager.hasMonitor(mac):
@@ -97,7 +100,7 @@ def main():
     level = logging.DEBUG
 
     logging.root.setLevel(level)
-
+    startProcess()
     run_server()
 
 if __name__ == '__main__':
