@@ -74,13 +74,14 @@ class MonitorManager:
             json.dump(self.monitorHosts, f)
 
     def load(self):
-        with open("./config/monitors") as f:
-            data = json.load(f)
-            self.monitors = {int(k): v for k, v in data.items()}
+        if os.path.exists(".config/"):
+            with open("./config/monitors") as f:
+                data = json.load(f)
+                self.monitors = {int(k): v for k, v in data.items()}
 
-        with open("./config/monitorHosts") as f:
-            data = json.load(f)
-            self.monitorHosts = {int(k): v for k, v in data.items()}
+            with open("./config/monitorHosts") as f:
+                data = json.load(f)
+                self.monitorHosts = {int(k): v for k, v in data.items()}
 
 
 if __name__ == '__main__':

@@ -16,7 +16,7 @@ macMapping = {
     "b8:27:eb:04:bf:2a": (2560, 0, 1280, 1024),
     "b8:27:eb:1b:99:2e": (2560, 1024, 1280, 1024)
 }
-hostAddress = "10.128.9.47"
+hostAddress = "10.128.0.1"
 monitorManager = MonitorManager()
 monitorManager.load()
 
