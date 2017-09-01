@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+passwd -d pi
 if [ ! -a "/etc/gst-videowall/update-done" ]; then
     until apt update; do
         sh -c "TERM=linux echo update failed... >/dev/tty0"
