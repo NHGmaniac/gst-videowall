@@ -12,7 +12,7 @@ class Pipeline(object):
         self.log = logging.getLogger('Pipeline')
         self.mm = MonitorManager()
         self.mm.load()
-        self.speed = "fast"
+        self.speed = "ultrafast"
 
     def configure(self):
         self.pipeline = None
