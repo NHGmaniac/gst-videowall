@@ -7,9 +7,9 @@ rtcp_send_port=$(echo "30000 + $id" | bc)
 rtcp_recv_port=$(echo "20000 + $id" | bc)
 while true; do \
 gst-launch-1.0 -v rtpbin name=rtpbin \
-	udpsrc caps="application/x-rtp,media=(string)video,clock-rate=(int)90000,encoding-name=(string)JPEG" \
+	udpsrc caps="application/x-rtp,media=(string)video,clock-rate=(int)90000,encoding-name=(string)H264" \
 	port=$rtp_port ! rtpbin.recv_rtp_sink_0 \
-        rtpbin. ! rtpjpegdepay ! queue ! decodebin ! autovideosink \
+        rtpbin. ! rtph264depay ! decodebin ! autovideosink \
 	udpsrc port=$rtcp_recv_port ! rtpbin.recv_rtcp_sink_0 \
 	rtpbin.send_rtcp_src_0 ! udpsink port=$rtcp_send_port host=$host sync=false async=false
 	sleep 2

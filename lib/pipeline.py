@@ -26,11 +26,10 @@ class Pipeline(object):
         ! videoconvert
         ! videoscale
         ! capsfilter caps="video/x-raw, width={width}, height={height}"
-        ! queue
         ! tee name=t 
         ! queue 
-        ! jpegenc 
-        ! rtpjpegpay 
+        ! x264enc speed-preset={speed} 
+        ! rtph264pay 
         ! rtpbin.send_rtp_sink_0
         
         rtpbin.send_rtp_src_0 
@@ -47,9 +46,8 @@ class Pipeline(object):
         t. 
         ! queue
         ! videocrop left={left} top={top} right={right} bottom={bottom}
-        ! jpegenc
-        ! queue
-        ! rtpjpegpay 
+        ! x264enc speed-preset={speed} 
+        ! rtph264pay 
         ! rtpbin.send_rtp_sink_{id}
         
         rtpbin.send_rtp_src_{id}
