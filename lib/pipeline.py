@@ -18,6 +18,14 @@ class Pipeline(object):
         self.pipeline = None
         pipelineTemplate = """
         rtpbin name=rtpbin 
+        videotestsrc pattern=snow
+        ! video/x-raw, width={width}, height={height}
+        ! videomixer name=mix sink_0::alpha=0.5 sink_1::alpha=0.5
+        ! tee name=t 
+        ! queue 
+        ! x264enc speed-preset={speed} 
+        ! rtph264pay 
+        ! rtpbin.send_rtp_sink_0
         
         udpsrc port=9999 caps="application/x-rtp"
         ! queue
@@ -26,11 +34,7 @@ class Pipeline(object):
         ! videoconvert
         ! videoscale
         ! capsfilter caps="video/x-raw, width={width}, height={height}"
-        ! tee name=t 
-        ! queue 
-        ! x264enc speed-preset={speed} 
-        ! rtph264pay 
-        ! rtpbin.send_rtp_sink_0
+        ! mix.
         
         rtpbin.send_rtp_src_0 
         ! udpsink port={preview_rtp_port} host={preview_host}
