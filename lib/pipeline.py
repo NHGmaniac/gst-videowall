@@ -26,6 +26,7 @@ class Pipeline(object):
         ! videoconvert
         ! videoscale
         ! capsfilter caps="video/x-raw, width={width}, height={height}"
+        ! queue
         ! tee name=t 
         ! queue 
         ! jpegenc 
