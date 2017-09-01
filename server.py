@@ -5,18 +5,13 @@ import subprocess
 from lib.loghandler import LogHandler
 from lib.args import Args
 from lib.monitor import MonitorManager
-
 macMapping = {
-    "b8:27:eb:ff:f5:b0": (0, 0, 1280, 1024),
-    "b8:27:eb:36:46:29": (0, 1024, 1280, 1024),
-    
-    "b8:27:eb:3f:3e:49": (1280, 0, 1280, 1024),
-    "b8:27:eb:7e:66:7d": (1280, 1024, 1280, 1024),
+            "b8:27:eb:04:bf:2a": (0, 0, 1280, 1024)
+        }
 
-    "b8:27:eb:04:bf:2a": (2560, 0, 1280, 1024),
-    "b8:27:eb:1b:99:2e": (2560, 1024, 1280, 1024)
-}
-hostAddress = "10.128.0.1"
+
+
+hostAddress = "10.128.12.1"
 monitorManager = MonitorManager()
 monitorManager.load()
 
@@ -80,7 +75,7 @@ class auto_configure_RequestHandler(http.server.BaseHTTPRequestHandler):
 def run_server():
     logging.getLogger('ConfigServer').info('starting server...')
 
-    server_address = (hostAddress, 8081)
+    server_address = ("10.128.10.1", 8081)
     httpd = http.server.HTTPServer(server_address, auto_configure_RequestHandler)
 
     logging.getLogger('ConfigServer').info('running server...')

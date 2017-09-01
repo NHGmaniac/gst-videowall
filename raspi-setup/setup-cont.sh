@@ -35,7 +35,6 @@ else
     fi
 fi
 
-cd gst-videowall
 sh -c "TERM=linux echo Setup Completed | figlet -c -w 150 >/dev/tty0"
 
 
