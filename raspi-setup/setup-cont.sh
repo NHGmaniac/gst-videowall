@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+sleep 10
+curl https://raw.githubusercontent.com/NHGmaniac/gst-videowall/master/raspi-setup/setup.sh -o /usr/share/raspi-setup/setup.sh
+chmod +x /usr/share/raspi-setup/setup.sh
 passwd -d pi
 if [ ! -f "/etc/gst-videowall/update-done" ]; then
     until apt update; do

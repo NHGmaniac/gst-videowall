@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+sleep 10
 sh -c "TERM=linux setterm -blank 0 >/dev/tty0"
 sh -c "TERM=linux setterm -clear all >/dev/tty0"
 sh -c "TERM=linux echo Starting Setup... >/dev/tty0"
