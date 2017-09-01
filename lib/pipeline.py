@@ -62,7 +62,7 @@ class Pipeline(object):
         pipeline = pipelineTemplate.format(width=self.mm.getRenderTargetScreen()[0],
                                            height=self.mm.getRenderTargetScreen()[1],
                                            speed=self.speed,
-                                           preview_host="10.128.9.47",
+                                           preview_host="10.128.10.1",
                                            preview_rtp_port="10000",
                                            preview_rtcp_send_port="20000",
                                            preview_rtcp_recv_port="30000")
