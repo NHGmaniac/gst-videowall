@@ -6,7 +6,7 @@ class MonitorManager:
     def __init__(self):
         self.monitors = dict()
         self.monitorHosts = dict()
-        self.targetwidth = 500
+        self.targetwidth = 1920
 
         # self.addMonitor(1, 0, 0, 1280, 1024, "10.128.9.86")
         # self.addMonitor(2, 1280, 0, 1280, 1024, "10.128.9.106")
@@ -46,11 +46,12 @@ class MonitorManager:
 
     def getRenderTargetScreen(self):
         w = self.targetwidth
+        print(self.getTotalWidth())
         h = self.lerp(self.targetwidth, self.getTotalWidth(), self.getTotalHeight())
         return w, h
 
     def lerp(self, x, width_src, width_tgt):
-        return int(x * width_tgt / width_src)
+        return int(x * (width_tgt / width_src))
 
     def getMonitorCropRect(self, id):
         l = self.lerp(self.monitors[id][0], self.getTotalWidth(), self.getRenderTargetScreen()[0])
