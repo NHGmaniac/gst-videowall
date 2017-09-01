@@ -46,7 +46,6 @@ class MonitorManager:
 
     def getRenderTargetScreen(self):
         w = self.targetwidth
-        print(self.getTotalWidth())
         h = self.lerp(self.targetwidth, self.getTotalWidth(), self.getTotalHeight())
         return w, h
 
