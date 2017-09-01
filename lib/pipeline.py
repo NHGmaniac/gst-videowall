@@ -47,6 +47,7 @@ class Pipeline(object):
         ! queue
         ! videocrop left={left} top={top} right={right} bottom={bottom}
         ! jpegenc
+        ! queue
         ! rtpjpegpay 
         ! rtpbin.send_rtp_sink_{id}
         
