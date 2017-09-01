@@ -73,7 +73,7 @@ class MonitorManager:
             json.dump(self.monitorHosts, f)
 
     def load(self):
-        if os.path.exists(".config/"):
+        if os.path.exists("./config"):
             with open("./config/monitors") as f:
                 data = json.load(f)
                 self.monitors = {int(k): v for k, v in data.items()}
