@@ -19,8 +19,11 @@ class Pipeline(object):
         pipelineTemplate = """
         rtpbin name=rtpbin 
         
-        filesrc location=/home/bene/res/psychill.mp4
+        udpsrc port=9999 caps="application/x-rtp"
+        ! queue
+        ! rtph264depay
         ! decodebin
+        ! videoconvert
         ! videoscale
         ! capsfilter caps="video/x-raw, width={width}, height={height}"
         ! tee name=t 
