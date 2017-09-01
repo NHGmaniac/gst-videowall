@@ -20,7 +20,7 @@ class Pipeline(object):
         rtpbin name=rtpbin 
         videotestsrc pattern=snow
         ! video/x-raw, width={width}, height={height}
-        ! videomixer name=mix sink_0::alpha=0.5 sink_1::alpha=0.5
+        ! videomixer name=mix
         ! tee name=t 
         ! queue 
         ! x264enc speed-preset={speed} 
