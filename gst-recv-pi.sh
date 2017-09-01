@@ -9,9 +9,9 @@ mkfifo gst-omx-pipe
 while true; do \
 omxplayer --live --win "0 0 1280 1024" gst-omx-pipe &
 gst-launch-1.0 rtpbin name=rtpbin \
-	udpsrc caps="application/x-rtp,media=(string)video,clock-rate=(int)90000,encoding-name=(string)H264" \
+	udpsrc caps="application/x-rtp,media=(string)video,clock-rate=(int)90000,encoding-name=(string)JPEG" \
 	port=$rtp_port ! rtpbin.recv_rtp_sink_0 \
-        rtpbin. ! rtph264depay ! h264parse ! mpegtsmux ! filesink location=gst-omx-pipe  \
+        rtpbin. ! rtpjpegdepay ! matroskamux ! filesink location=gst-omx-pipe  \
 	udpsrc port=$rtcp_recv_port ! rtpbin.recv_rtcp_sink_0 \
 	rtpbin.send_rtcp_src_0 ! udpsink port=$rtcp_send_port host=$host sync=false async=false
 	sleep 2
