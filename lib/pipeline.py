@@ -46,6 +46,8 @@ class Pipeline(object):
         t. 
         ! queue
         ! videocrop left={left} top={top} right={right} bottom={bottom}
+        ! videoscale
+        ! video/x-raw, width=1280, height=1024
         ! x264enc tune=fastdecode speed-preset={speed} 
         ! rtph264pay 
         ! rtpbin.send_rtp_sink_{id}
