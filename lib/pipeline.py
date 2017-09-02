@@ -12,7 +12,7 @@ class Pipeline(object):
         self.log = logging.getLogger('Pipeline')
         self.mm = MonitorManager()
         self.mm.load()
-        self.speed = "ultrafast"
+        self.speed = "veryfast"
 
     def configure(self):
         self.pipeline = None
@@ -28,7 +28,7 @@ class Pipeline(object):
         ! capsfilter caps="video/x-raw, width={width}, height={height}"
         ! tee name=t 
         ! queue 
-        ! x264enc speed-preset={speed} --tune zerolatency
+        ! x264enc speed-preset={speed} tune=zerolatency
         ! rtph264pay 
         ! rtpbin.send_rtp_sink_0
         
@@ -46,7 +46,7 @@ class Pipeline(object):
         t. 
         ! queue
         ! videocrop left={left} top={top} right={right} bottom={bottom}
-        ! x264enc speed-preset={speed} --tune zerolatency 
+        ! x264enc speed-preset={speed} tune=zerolatency 
         ! rtph264pay 
         ! rtpbin.send_rtp_sink_{id}
         
