@@ -9,7 +9,7 @@ while true; do \
 gst-launch-1.0 -v rtpbin name=rtpbin \
 	udpsrc caps="application/x-rtp,media=(string)video,clock-rate=(int)90000,encoding-name=(string)JPEG" \
 	port=$rtp_port ! rtpbin.recv_rtp_sink_0 \
-        rtpbin. ! rtpjpegdepay ! queue ! decodebin ! autovideosink \
+        rtpbin. ! rtpjpegdepay ! jpegdec ! autovideosink \
 	udpsrc port=$rtcp_recv_port ! rtpbin.recv_rtcp_sink_0 \
 	rtpbin.send_rtcp_src_0 ! udpsink port=$rtcp_send_port host=$host sync=false async=false
 	sleep 2
