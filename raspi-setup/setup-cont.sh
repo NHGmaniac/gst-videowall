@@ -26,17 +26,16 @@ sh -c "TERM=linux echo $mac | figlet -c -w 150 -W >/dev/tty0"
 
 cd /usr/share
 if [ ! -d "gst-videowall" ]; then
-    git clone -b mjpeg-test https://github.com/NHGmaniac/gst-videowall
+    git clone https://github.com/NHGmaniac/gst-videowall
     cd gst-videowall
 else
     cd gst-videowall
     if ! git pull; then
         cd ..
         rm -rf gst-videowall
-        git clone -b mjpeg-test https://github.com/NHGmaniac/gst-videowall
+        git clone https://github.com/NHGmaniac/gst-videowall
         cd gst-videowall
     fi
-    git checkout mjpeg-test
 fi
 
 sh -c "TERM=linux echo Setup Completed | figlet -c -w 150 >/dev/tty0"
