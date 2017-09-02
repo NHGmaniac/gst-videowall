@@ -20,7 +20,7 @@ class Pipeline(object):
         rtpbin name=rtpbin 
         
         udpsrc port=9999 caps="application/x-rtp"
-        ! queue
+        ! queue flush-on-eos=true
         ! rtph264depay
         ! decodebin
         ! videoconvert
