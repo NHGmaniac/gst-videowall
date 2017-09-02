@@ -23,7 +23,7 @@ class Pipeline(object):
         ! videotestsrc pattern=snow
         ! capsfilter caps="video/x-raw, width={width}, height={height}"
         ! tee name=t
-        ! mq.
+        ! multiqueue name=mq
         ! x264enc speed-preset={speed} tune=zerolatency
         ! rtph264pay 
         ! rtpbin.send_rtp_sink_0
