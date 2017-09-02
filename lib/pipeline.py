@@ -13,6 +13,7 @@ class Pipeline(object):
         self.mm = MonitorManager()
         self.mm.load()
         self.speed = "ultrafast"
+        self.option_string = "--keyint=1"
 
     def configure(self):
         self.pipeline = None
@@ -28,7 +29,7 @@ class Pipeline(object):
         ! capsfilter caps="video/x-raw, width={width}, height={height}"
         ! tee name=t
         ! multiqueue name=mq
-        ! x264enc speed-preset={speed} tune=zerolatency
+        ! x264enc speed-preset={speed} option-string="{option_string}" tune=zerolatency
         ! rtph264pay 
         ! rtpbin.send_rtp_sink_0
         
@@ -47,7 +48,7 @@ class Pipeline(object):
         ! mq.
         mq.
         ! videocrop left={left} top={top} right={right} bottom={bottom}
-        ! x264enc speed-preset={speed} tune=zerolatency intra-refresh=true
+        ! x264enc speed-preset={speed} option-string="{option_string}" tune=zerolatency intra-refresh=true
         ! rtph264pay 
         ! rtpbin.send_rtp_sink_{id}
         
@@ -63,6 +64,7 @@ class Pipeline(object):
         pipeline = pipelineTemplate.format(width=self.mm.getRenderTargetScreen()[0],
                                            height=self.mm.getRenderTargetScreen()[1],
                                            speed=self.speed,
+                                           option_string=self.option_string,
                                            preview_host="10.128.10.1",
                                            preview_rtp_port="10000",
                                            preview_rtcp_send_port="20000",
@@ -72,6 +74,7 @@ class Pipeline(object):
             size = self.mm.getMonitorSize(monitorid)
             pipeline += monitorTemplate.format(left=rect[0], top=rect[1], right=rect[2], bottom=rect[3],
                                                width=size[0], height=size[1], speed=self.speed,
+                                               option_string=self.option_string,
                                                host=self.mm.monitorHosts[monitorid][1],
                                                rtp_port="{}".format(10000+monitorid),
                                                rtcp_send_port="{}".format(20000+monitorid),
