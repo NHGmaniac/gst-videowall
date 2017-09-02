@@ -27,8 +27,6 @@ class Pipeline(object):
         rtpbin name=rtpbin 
         
         queue name=input
-        ! rtph264depay
-        ! decodebin
         ! videoconvert
         ! videoscale
         ! capsfilter caps="video/x-raw, width={width}, height={height}"
@@ -88,18 +86,27 @@ class Pipeline(object):
 
         self.pipeline = Gst.parse_launch(pipeline)
 
-        self.source = Gst.ElementFactory.make("udpsrc", "video-source")
-        self.source.set_property("port", 9999)
-        self.source.set_property("caps",
+        source_1 = Gst.ElementFactory.make("udpsrc", "video-source")
+        source_1.set_property("port", 9999)
+        source_1.set_property("caps",
                                  Gst.Caps.from_string(
                                      "application/x-rtp"
                                  )
                                  )
+        source_2 = Gst.ElementFactory.make("queue")
+        source_3 = Gst.ElementFactory.make("rtph264depay")
+        source_4 = Gst.ElementFactory.make("decodebin")
+        self.pipeline.add(source_1)
+        self.pipeline.add(source_2)
+        self.pipeline.add(source_3)
+        self.pipeline.add(source_4)
+        source_1.link(source_2)
+        source_2.link(source_3)
+        source_3.link(source_4)
+        source_4.link(self.pipeline.get_by_name("input"))
 
+        self.source = source_4
         self.dummysrc = Gst.ElementFactory.make("videotestsrc", "video-source")
-
-        self.pipeline.add(self.source)
-        self.source.link(self.pipeline.get_by_name("input"))
 
         bus = self.pipeline.get_bus()
         bus.add_signal_watch()
@@ -110,6 +117,7 @@ class Pipeline(object):
 
     def on_message(self, bus, message):
         t = message.type
+        print(bus,message, t)
         if t == Gst.MessageType.EOS:
             self.dummysrc.link(self.pipeline.get_by_name("input"))
             self.source.unlink()
@@ -122,6 +130,8 @@ class Pipeline(object):
                 self.dummysrc.unlink()
                 self.linked = True
                 self.log.info("Pipeline linked to real source")
+            else:
+                print("Cannot link to new source on already linked source")
 
     def start(self):
         self.log.info('Starting Pipeline')
