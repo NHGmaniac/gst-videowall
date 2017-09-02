@@ -13,22 +13,20 @@ class Pipeline(object):
         self.mm = MonitorManager()
         self.mm.load()
         self.speed = "ultrafast"
+        self.option_string = "--keyint=1"
 
     def configure(self):
         self.pipeline = None
         pipelineTemplate = """
         rtpbin name=rtpbin 
         
-        udpsrc port=9999 caps="application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)H264, packetization-mode=(string)1, profile-level-id=(string)640028, payload=(int)96, ssrc=(uint)3042026353, timestamp-offset=(uint)1763490137, seqnum-offset=(uint)614, a-framerate=(string)25"
-        ! rtph264depay
-        ! decodebin
-        ! queue
+        udpsrc port=9999 caps="application/x-rtp"
         ! videoconvert
         ! videoscale
         ! capsfilter caps="video/x-raw, width={width}, height={height}"
         ! tee name=t
         ! multiqueue name=mq
-        ! x264enc speed-preset={speed} tune=zerolatency
+        ! x264enc speed-preset={speed} option-string="{option_string}" tune=zerolatency
         ! rtph264pay 
         ! rtpbin.send_rtp_sink_0
         
@@ -47,7 +45,7 @@ class Pipeline(object):
         ! mq.
         mq.
         ! videocrop left={left} top={top} right={right} bottom={bottom}
-        ! x264enc speed-preset={speed} tune=zerolatency intra-refresh=true
+        ! x264enc speed-preset={speed} option-string="{option_string}" tune=zerolatency intra-refresh=true
         ! rtph264pay 
         ! rtpbin.send_rtp_sink_{id}
         
