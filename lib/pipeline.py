@@ -19,12 +19,7 @@ class Pipeline(object):
         pipelineTemplate = """
         rtpbin name=rtpbin 
         
-        udpsrc port=9999 caps="application/x-rtp"
-        ! queue flush-on-eos=true
-        ! rtph264depay
-        ! decodebin
-        ! videoconvert
-        ! videoscale
+        ! videotestsrc pattern=snow
         ! capsfilter caps="video/x-raw, width={width}, height={height}"
         ! tee
         ! multiqueue name=t
