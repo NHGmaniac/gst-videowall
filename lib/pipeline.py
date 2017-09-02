@@ -1,6 +1,10 @@
 #!/usr/bin/python3
 import os, logging, subprocess
 
+import gi
+
+gi.require_version("Gst", "1.0")
+
 from gi.repository import Gst
 
 # import library components
@@ -13,14 +17,16 @@ class Pipeline(object):
         self.mm = MonitorManager()
         self.mm.load()
         self.speed = "ultrafast"
+        self.source = None
+        self.dummysrc = None
+        self.linked = False
 
     def configure(self):
         self.pipeline = None
         pipelineTemplate = """
         rtpbin name=rtpbin 
         
-        udpsrc port=9999 caps="application/x-rtp"
-        ! queue
+        ! queue name=input
         ! rtph264depay
         ! decodebin
         ! videoconvert
@@ -72,9 +78,9 @@ class Pipeline(object):
             pipeline += monitorTemplate.format(left=rect[0], top=rect[1], right=rect[2], bottom=rect[3],
                                                width=size[0], height=size[1], speed=self.speed,
                                                host=self.mm.monitorHosts[monitorid][1],
-                                               rtp_port="{}".format(10000+monitorid),
-                                               rtcp_send_port="{}".format(20000+monitorid),
-                                               rtcp_recv_port="{}".format(30000+monitorid),
+                                               rtp_port="{}".format(10000 + monitorid),
+                                               rtcp_send_port="{}".format(20000 + monitorid),
+                                               rtcp_recv_port="{}".format(30000 + monitorid),
                                                id=monitorid)
 
         self.log.debug("Generated Pipeline")
@@ -82,6 +88,40 @@ class Pipeline(object):
 
         self.pipeline = Gst.parse_launch(pipeline)
 
+        self.source = Gst.ElementFactory.make("udpsrc", "video-source")
+        self.source.set_property("port", 9999)
+        self.source.set_property("caps",
+                                 Gst.Caps.from_string(
+                                     "application/x-rtp"
+                                 )
+                                 )
+
+        self.dummysrc = Gst.ElementFactory.make("videotestsrc", "video-source")
+
+        self.pipeline.add(self.source)
+        self.source.link(self.pipeline.get_by_name("input"))
+
+        bus = self.pipeline.get_bus()
+        bus.add_signal_watch()
+        bus.enable_sync_message_emission()
+        bus.connect("message", self.on_message)
+
+        self.linked = True
+
+    def on_message(self, bus, message):
+        t = message.type
+        if t == Gst.MessageType.EOS:
+            self.dummysrc.link(self.pipeline.get_by_name("input"))
+            self.source.unlink()
+            self.linked = False
+            self.log.info("Pipeline linked to dummy source")
+
+        elif t == Gst.MessageType.STREAM_START:
+            if not self.linked:
+                self.source.link(self.pipeline.get_by_name("input"))
+                self.dummysrc.unlink()
+                self.linked = True
+                self.log.info("Pipeline linked to real source")
 
     def start(self):
         self.log.info('Starting Pipeline')
