@@ -18,11 +18,13 @@ class Pipeline(object):
         self.pipeline = None
         pipelineTemplate = """
         rtpbin name=rtpbin 
+        multiqueue name=mq.
+        tee name t.
         
         ! videotestsrc pattern=snow
         ! capsfilter caps="video/x-raw, width={width}, height={height}"
-        ! tee name=t
-        ! multiqueue name=mq
+        ! t.
+        ! mq.
         ! x264enc speed-preset={speed} tune=zerolatency
         ! rtph264pay 
         ! rtpbin.send_rtp_sink_0
