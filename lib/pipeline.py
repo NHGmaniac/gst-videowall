@@ -20,7 +20,8 @@ class Pipeline(object):
         pipelineTemplate = """
         rtpbin name=rtpbin 
         
-        udpsrc port=9999 caps="application/x-raw"
+        udpsrc port=9999 caps="application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)RAW, depth=(string)8, width=(string)1920, height=(string)1080, payload=(int)96"
+        ! rtpvrawdepay
         ! videoconvert
         ! videoscale
         ! capsfilter caps="video/x-raw, width={width}, height={height}"
