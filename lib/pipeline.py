@@ -26,7 +26,7 @@ class Pipeline(object):
         pipelineTemplate = """
         rtpbin name=rtpbin 
         
-        ! queue name=input
+        queue name=input
         ! rtph264depay
         ! decodebin
         ! videoconvert
