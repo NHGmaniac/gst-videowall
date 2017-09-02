@@ -39,7 +39,8 @@ class Pipeline(object):
 
         monitorTemplate = """
         t.
-        ! multiqueue
+        ! mq.
+        mq.
         ! videocrop left={left} top={top} right={right} bottom={bottom}
         ! x264enc speed-preset={speed} tune=zerolatency intra-refresh=true
         ! rtph264pay 
