@@ -26,6 +26,7 @@ class Pipeline(object):
         ! videoconvert
         ! videoscale
         ! capsfilter caps="video/x-raw, width={width}, height={height}"
+        ! tee
         ! multiqueue name=t
         t.
         ! x264enc speed-preset={speed} tune=zerolatency
@@ -44,7 +45,6 @@ class Pipeline(object):
 
         monitorTemplate = """
         t. 
-        ! queue
         ! videocrop left={left} top={top} right={right} bottom={bottom}
         ! x264enc speed-preset={speed} tune=zerolatency intra-refresh=true
         ! rtph264pay 
