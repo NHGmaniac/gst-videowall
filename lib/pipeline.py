@@ -18,8 +18,8 @@ class Pipeline(object):
         self.pipeline = None
         pipelineTemplate = """
         rtpbin name=rtpbin 
-        multiqueue name=mq.
-        tee name=t.
+        multiqueue name=mq
+        tee name=t
         
         ! videotestsrc pattern=snow
         ! capsfilter caps="video/x-raw, width={width}, height={height}"
