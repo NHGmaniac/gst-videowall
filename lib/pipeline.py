@@ -72,6 +72,7 @@ class Pipeline(object):
             size = self.mm.getMonitorSize(monitorid)
             pipeline += monitorTemplate.format(left=rect[0], top=rect[1], right=rect[2], bottom=rect[3],
                                                width=size[0], height=size[1], speed=self.speed,
+                                               option_string=self.option_string,
                                                host=self.mm.monitorHosts[monitorid][1],
                                                rtp_port="{}".format(10000+monitorid),
                                                rtcp_send_port="{}".format(20000+monitorid),
