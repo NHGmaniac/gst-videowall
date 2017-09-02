@@ -26,8 +26,8 @@ class Pipeline(object):
         ! videoconvert
         ! videoscale
         ! capsfilter caps="video/x-raw, width={width}, height={height}"
-        ! tee name=t 
-        ! queue 
+        ! multiqueue name=t
+        t.
         ! x264enc speed-preset={speed} tune=zerolatency
         ! rtph264pay 
         ! rtpbin.send_rtp_sink_0
@@ -46,7 +46,7 @@ class Pipeline(object):
         t. 
         ! queue
         ! videocrop left={left} top={top} right={right} bottom={bottom}
-        ! x264enc speed-preset={speed} tune=zerolatency intra-refresh=true
+        ! x264enc speed-preset={speed} tune=zerolatency intra-refresh=true no-scenecut=true
         ! rtph264pay 
         ! rtpbin.send_rtp_sink_{id}
         
