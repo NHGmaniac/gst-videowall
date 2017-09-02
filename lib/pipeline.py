@@ -18,8 +18,8 @@ class Pipeline(object):
         self.pipeline = None
         pipelineTemplate = """
         rtpbin name=rtpbin 
-        
-        ! videotestsrc pattern=snow
+        udpsrc port=9999 caps="application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)RAW"
+        ! videoconvert
         ! capsfilter caps="video/x-raw, width={width}, height={height}"
         ! tee name=t
         ! multiqueue name=mq
