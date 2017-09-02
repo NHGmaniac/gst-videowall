@@ -13,7 +13,7 @@ class Pipeline(object):
         self.mm = MonitorManager()
         self.mm.load()
         self.speed = "ultrafast"
-        self.option_string = "--keyint=1"
+        self.option_string = "keyint=1"
 
     def configure(self):
         self.pipeline = None
