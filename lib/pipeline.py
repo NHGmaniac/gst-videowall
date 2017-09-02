@@ -18,18 +18,23 @@ class Pipeline(object):
         pipelineTemplate = """
         rtpbin name=rtpbin 
         
+<<<<<<< HEAD
         udpsrc port=9999 caps="application/x-rtp"
         ! queue
         ! rtpjpegdepay
+=======
+        udpsrc port=9999 caps="application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)H264, packetization-mode=(string)1, profile-level-id=(string)640028, payload=(int)96, ssrc=(uint)3042026353, timestamp-offset=(uint)1763490137, seqnum-offset=(uint)614, a-framerate=(string)25"
+        ! rtph264depay
+>>>>>>> 5641de321bba65899193f3549154cc2d41164ad4
         ! decodebin
+        ! queue
         ! videoconvert
         ! videoscale
         ! capsfilter caps="video/x-raw, width={width}, height={height}"
-        ! queue
-        ! tee name=t 
-        ! queue 
-        ! jpegenc 
-        ! rtpjpegpay 
+        ! tee name=t
+        ! multiqueue name=mq
+        ! x264enc speed-preset={speed} tune=zerolatency
+        ! rtph264pay 
         ! rtpbin.send_rtp_sink_0
         
         rtpbin.send_rtp_src_0 
@@ -43,12 +48,12 @@ class Pipeline(object):
         """
 
         monitorTemplate = """
-        t. 
-        ! queue
+        t.
+        ! mq.
+        mq.
         ! videocrop left={left} top={top} right={right} bottom={bottom}
-        ! jpegenc
-        ! queue
-        ! rtpjpegpay 
+        ! x264enc speed-preset={speed} tune=zerolatency intra-refresh=true
+        ! rtph264pay 
         ! rtpbin.send_rtp_sink_{id}
         
         rtpbin.send_rtp_src_{id}
@@ -62,7 +67,7 @@ class Pipeline(object):
         """
         pipeline = pipelineTemplate.format(width=self.mm.getRenderTargetScreen()[0],
                                            height=self.mm.getRenderTargetScreen()[1],
-                                           preview_host="10.128.10.11",
+                                           preview_host="10.128.10.1",
                                            preview_rtp_port="10000",
                                            preview_rtcp_send_port="20000",
                                            preview_rtcp_recv_port="30000")
