@@ -21,9 +21,8 @@ class Pipeline(object):
         
         ! videotestsrc pattern=snow
         ! capsfilter caps="video/x-raw, width={width}, height={height}"
-        ! tee
-        ! multiqueue name=t
-        t.
+        ! tee name=t
+        ! multiqueue name=mq
         ! x264enc speed-preset={speed} tune=zerolatency
         ! rtph264pay 
         ! rtpbin.send_rtp_sink_0
@@ -39,7 +38,8 @@ class Pipeline(object):
         """
 
         monitorTemplate = """
-        t. 
+        t.
+        ! mq.
         ! videocrop left={left} top={top} right={right} bottom={bottom}
         ! x264enc speed-preset={speed} tune=zerolatency intra-refresh=true
         ! rtph264pay 
