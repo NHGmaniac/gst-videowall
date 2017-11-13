@@ -6,7 +6,9 @@ from gi.repository import Gst
 # import library components
 from lib.monitor import MonitorManager
 
-
+#        udpsrc port=9999 caps="application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)H264, packetization-mode=(string)1, profile-level-id=(string)640028, payload=(int)96, ssrc=(uint)3042026353, timestamp-offset=(uint)1763490137, seqnum-offset=(uint)614, a-framerate=(string)25"
+#        ! rtph264depay
+#        ! decodebin
 class Pipeline(object):
     def __init__(self):
         self.log = logging.getLogger('Pipeline')
@@ -19,9 +21,7 @@ class Pipeline(object):
         pipelineTemplate = """
         rtpbin name=rtpbin 
         
-        udpsrc port=9999 caps="application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)H264, packetization-mode=(string)1, profile-level-id=(string)640028, payload=(int)96, ssrc=(uint)3042026353, timestamp-offset=(uint)1763490137, seqnum-offset=(uint)614, a-framerate=(string)25"
-        ! rtph264depay
-        ! decodebin
+        videotestsrc
         ! queue
         ! videoconvert
         ! videoscale
