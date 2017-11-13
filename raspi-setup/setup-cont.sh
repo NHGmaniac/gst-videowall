@@ -36,7 +36,7 @@ else
         git clone https://github.com/NHGmaniac/gst-videowall
         cd gst-videowall
     fi
-    git checkout test_iframeonly
+    git checkout master
 fi
 
 sh -c "TERM=linux echo Setup Completed | figlet -c -w 150 >/dev/tty0"
