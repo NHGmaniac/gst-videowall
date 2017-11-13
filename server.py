@@ -86,7 +86,7 @@ class auto_configure_RequestHandler(http.server.BaseHTTPRequestHandler):
 def run_server():
     logging.getLogger('ConfigServer').info('starting server...')
 
-    server_address = ("127.0.0.1", 8081)
+    server_address = (hostAddress, 8081)
     httpd = http.server.HTTPServer(server_address, auto_configure_RequestHandler)
 
     logging.getLogger('ConfigServer').info('running server...')
