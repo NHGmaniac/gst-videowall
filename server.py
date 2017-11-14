@@ -22,7 +22,7 @@ macMapping = {
 
 
 
-hostAddress = "10.128.9.119"
+hostAddress = "10.128.9.47"
 monitorManager = MonitorManager()
 monitorManager.load()
 
@@ -62,7 +62,10 @@ class auto_configure_RequestHandler(http.server.BaseHTTPRequestHandler):
         if mac not in macMapping.keys():
             self.send_response(418, "I'm a teapot")
             return
-
+        restart = True
+        if monitorManager.hasMonitor(mac):
+            print("Client already registered")
+            restart = False
         client_id = add_device(mac, ip)
         if client_id is None:
             self.send_response(418, "I'm a teapot")
@@ -78,7 +81,8 @@ class auto_configure_RequestHandler(http.server.BaseHTTPRequestHandler):
         # Write content as utf-8 data
         self.wfile.write(bytes("{} {}".format(client_id, hostAddress), "utf8"))
 
-        startProcess()
+        if restart:
+            startProcess()
 
         return
 
