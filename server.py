@@ -7,14 +7,14 @@ from lib.args import Args
 from lib.monitor import MonitorManager
 macMapping = {
             "b8:27:eb:3f:3e:49": (0, 0, 1280, 1024),
-            "b8:27:eb:04:bf:2a": (0, 1024, 1280, 1024),
+            "b8:27:eb:7e:66:7d": (0, 1024, 1280, 1024),
             "b8:27:eb:94:22:1b": (0, 2048, 1280, 1024),
 
             "b8:27:eb:36:46:29": (1280, 0, 1280, 1024),
             "b8:27:eb:1b:99:2e": (1280, 1024, 1280, 1024),
             "b8:27:eb:01:e0:da": (1280, 2048, 1280, 1024),
 
-            "b8:27:eb:7e:66:7d": (2560, 0, 1280, 1024),
+            "b8:27:eb:04:bf:2a": (2560, 0, 1280, 1024),
             "b8:27:eb:ff:f5:b0": (2560, 1024, 1280, 1024),
             "b8:27:eb:f6:0c:00": (2560, 2048, 1280, 1024)
 
@@ -22,7 +22,7 @@ macMapping = {
 
 
 
-hostAddress = "138.201.80.211"
+hostAddress = "10.128.9.119"
 monitorManager = MonitorManager()
 monitorManager.load()
 
@@ -86,7 +86,7 @@ class auto_configure_RequestHandler(http.server.BaseHTTPRequestHandler):
 def run_server():
     logging.getLogger('ConfigServer').info('starting server...')
 
-    server_address = ("127.0.0.1", 8081)
+    server_address = (hostAddress, 8081)
     httpd = http.server.HTTPServer(server_address, auto_configure_RequestHandler)
 
     logging.getLogger('ConfigServer').info('running server...')
