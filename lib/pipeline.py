@@ -25,8 +25,8 @@ class Pipeline(object):
         pipelineTemplate = """
         rtpbin name=rtpbin 
         
-        tcpserversrc host=127.0.0.1 port=9999
-        ! matroskademux
+        udpsrc port=999
+        ! rtpvrawdepay
         ! queue max-size-time=0 max-size-buffers=0 max-size-bytes=1073741274
         ! videoconvert
         ! videoscale
