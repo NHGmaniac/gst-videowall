@@ -9,12 +9,15 @@ from lib.monitor import MonitorManager
 #        udpsrc port=9999 caps="application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)H264, packetization-mode=(string)1, profile-level-id=(string)640028, payload=(int)96, ssrc=(uint)3042026353, timestamp-offset=(uint)1763490137, seqnum-offset=(uint)614, a-framerate=(string)25"
 #        ! rtph264depay
 #        ! decodebin
+#        udpsrc port=9999 caps="application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)RAW, sampling=(string)YCbCr-4:2:0, depth=(string)8, width=(string)1920, height=(string)1080, colorimetry=(string)BT709-2, payload=(int)96, ssrc=(uint)2100997544, timestamp-offset=(uint)3604836381, seqnum-offset=(uint)15493, a-framerate=(string)25"
+#        ! rtpvrawdepay
+
 class Pipeline(object):
     def __init__(self):
         self.log = logging.getLogger('Pipeline')
         self.mm = MonitorManager()
         self.mm.load()
-        self.speed = "ultrafast"
+        self.speed = "veryfast"
         self.option_string = "keyint=1"
 
     def configure(self):
@@ -22,10 +25,9 @@ class Pipeline(object):
         pipelineTemplate = """
         rtpbin name=rtpbin 
         
-        udpsrc port=9999 caps="application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)H264, packetization-mode=(string)1, profile-level-id=(string)640028, payload=(int)96, ssrc=(uint)3042026353, timestamp-offset=(uint)1763490137, seqnum-offset=(uint)614, a-framerate=(string)25"
-        ! rtph264depay
-        ! decodebin
-        ! queue
+        tcpserversrc port=9999 host=127.0.0.1
+        ! matroskademux
+        ! queue max-size-time=0 max-size-buffers=0 max-size-bytes=1073741274
         ! videoconvert
         ! videoscale
         ! capsfilter caps="video/x-raw, width={width}, height={height}"
@@ -67,7 +69,7 @@ class Pipeline(object):
                                            height=self.mm.getRenderTargetScreen()[1],
                                            speed=self.speed,
                                            option_string=self.option_string,
-                                           preview_host="10.128.10.1",
+                                           preview_host="10.128.9.47",
                                            preview_rtp_port="10000",
                                            preview_rtcp_send_port="20000",
                                            preview_rtcp_recv_port="30000")
