@@ -25,7 +25,7 @@ class Pipeline(object):
         pipelineTemplate = """
         rtpbin name=rtpbin 
         
-        udpsrc port=9999 caps="application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)RAW, sampling=(string)YCbCr-4:2:0, depth=(string)8, width=(string)1920, height=(string)1080, colorimetry=(string)BT709-2, payload=(int)96, ssrc=(uint)2416381773, timestamp-offset=(uint)178584973, seqnum-offset=(uint)12394, a-framerate=(string)25"        
+        udpsrc port=9999 caps="application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)H264, packetization-mode=(string)1, profile-level-id=(string)640028, sprop-parameter-sets=(string)"Z2QAKKzZQHgCJ+XAWoCAgKAAAAMAIAAABlHjBjLA\,aOvssiw\=", payload=(int)96, ssrc=(uint)1038856160, timestamp-offset=(uint)3218611706, seqnum-offset=(uint)17573, a-framerate=(string)25"        
         ! rtph264depay
         ! decodebin
         ! queue max-size-time=0 max-size-buffers=0 max-size-bytes=1073741274
