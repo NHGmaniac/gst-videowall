@@ -25,7 +25,7 @@ class Pipeline(object):
         pipelineTemplate = """
         rtpbin name=rtpbin 
         
-        udpsrc port=9999 caps="application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)RAW, sampling=(string)YCbCr-4:2:0, depth=(string)8, width=(string)1920, height=(string)1080, colorimetry=(string)BT709-2, payload=(int)96, ssrc=(uint)2416381773, timestamp-offset=(uint)178584973, seqnum-offset=(uint)12394, a-framerate=(string)25"        ! rtpvrawdepay
+        tcpserversrc port=9999 host=127.0.0.1
         ! queue max-size-time=0 max-size-buffers=0 max-size-bytes=1073741274
         ! videoconvert
         ! videoscale
