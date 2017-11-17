@@ -17,8 +17,8 @@ class Pipeline(object):
         self.log = logging.getLogger('Pipeline')
         self.mm = MonitorManager()
         self.mm.load()
-        self.speed = "veryfast"
-        self.option_string = "keyint=1"
+        self.speed = "faster"
+        self.option_string = ""
 
     def configure(self):
         self.pipeline = None
