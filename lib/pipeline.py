@@ -52,7 +52,7 @@ class Pipeline(object):
         ! mq.
         mq.
         ! videocrop left={left} top={top} right={right} bottom={bottom}
-        ! x264enc speed-preset={speed} option-string="{option_string}" quantizer=30 tune=zerolatency intra-refresh=true
+        ! x264enc speed-preset={speed} option-string="{option_string}" quantizer=24 bitrate=50000 tune=zerolatency intra-refresh=true
         ! rtph264pay 
         ! rtpbin.send_rtp_sink_{id}
         
