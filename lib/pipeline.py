@@ -32,7 +32,7 @@ class Pipeline(object):
         ! videoscale
         ! capsfilter caps="video/x-raw, width={width}, height={height}"
         ! tee name=t
-        ! multiqueue name=mq max-size-buffers=0 max-size-time=0 max-size-bytes=2073741274
+        ! multiqueue name=mq
         ! x264enc speed-preset={speed} option-string="{option_string}" tune=zerolatency
         ! rtph264pay 
         ! rtpbin.send_rtp_sink_0
@@ -53,6 +53,7 @@ class Pipeline(object):
         mq.
         ! videocrop left={left} top={top} right={right} bottom={bottom}
         ! x264enc speed-preset={speed} option-string="{option_string}" tune=zerolatency intra-refresh=true quantizer=30 pass=5
+        ! queue max-size-buffers=0 max-size-time=0 max-size-bytes=104857600
         ! rtph264pay 
         ! rtpbin.send_rtp_sink_{id}
         
