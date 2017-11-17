@@ -17,7 +17,7 @@ class Pipeline(object):
         self.log = logging.getLogger('Pipeline')
         self.mm = MonitorManager()
         self.mm.load()
-        self.speed = "faster"
+        self.speed = "slow"
         self.option_string = "keyint=1"
 
     def configure(self):
@@ -52,7 +52,7 @@ class Pipeline(object):
         ! mq.
         mq.
         ! videocrop left={left} top={top} right={right} bottom={bottom}
-        ! x264enc speed-preset={speed} option-string="{option_string}" tune=zerolatency intra-refresh=true quantizer=40 pass=5
+        ! x264enc speed-preset={speed} option-string="{option_string}" tune=zerolatency intra-refresh=true quantizer=30 pass=5
         ! rtph264pay 
         ! rtpbin.send_rtp_sink_{id}
         
