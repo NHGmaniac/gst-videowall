@@ -25,7 +25,8 @@ class Pipeline(object):
         pipelineTemplate = """
         rtpbin name=rtpbin 
         
-        tcpserversrc port=9999 host=127.0.0.1 ! matroskademux
+        filesrc location=/mnt/media/videowall-videos/24.mp4
+        ! decodebin
         ! queue max-size-time=0 max-size-buffers=0 max-size-bytes=1073741274
         ! videoconvert
         ! videoscale
