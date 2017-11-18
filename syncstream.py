@@ -21,7 +21,7 @@ GObject.threads_init()
 
 # import local classes
 from lib.args import Args
-from lib.pipeline import Pipeline
+from lib.pipeline import Pipeline,TCPSource
 from lib.loghandler import LogHandler
 from lib.mainloop import MainLoop
 
@@ -34,6 +34,7 @@ class SyncStream(object):
         # initialize subsystem
         self.log.debug('creating A/V-Pipeline')
         self.pipeline = Pipeline()
+        self.source = TCPSource()
 
     def run(self):
         self.pipeline.configure()

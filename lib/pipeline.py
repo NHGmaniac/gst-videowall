@@ -2,6 +2,7 @@
 import os, logging, subprocess
 
 from gi.repository import Gst
+from lib.tcpsingleconnection import TCPSingleConnection
 
 # import library components
 from lib.monitor import MonitorManager
@@ -11,6 +12,43 @@ from lib.monitor import MonitorManager
 #        ! decodebin
 #        udpsrc port=9999 caps="application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)RAW, sampling=(string)YCbCr-4:2:0, depth=(string)8, width=(string)1920, height=(string)1080, colorimetry=(string)BT709-2, payload=(int)96, ssrc=(uint)2100997544, timestamp-offset=(uint)3604836381, seqnum-offset=(uint)15493, a-framerate=(string)25"
 #        ! rtpvrawdepay
+
+
+class TCPSource(TCPSingleConnection):
+    def __init__(self, port):
+        self.log = logging.getLogger("TCPSource")
+        super().__init__(port)
+        self.fd = None
+        self.pipeline = None
+
+    def on_accepted(self, conn, addr):
+        self.fd = conn.fileno()
+        pipeline = """
+        fdsrc fd={fd} blocksize=1048576
+        ! queue
+        ! matroskademux name=demux
+        ! intervideosink channel=video
+        """
+        self.pipeline = Gst.parse_launch(pipeline.format(self.fd))
+        self.pipeline.bus.add_signal_watch()
+        self.pipeline.bus.connect("message::eos", self.on_eos)
+        self.pipeline.bus.connect("message::error", self.on_error)
+        self.pipeline.set_state(Gst.State.PLAYING)
+
+    def disconnect(self):
+        self.pipeline.set_state(Gst.State.NULL)
+        self.pipeline = None
+        self.close_connection()
+
+    def on_eos(self, bus, message):
+        if self.currentConnection is not None:
+            self.disconnect()
+
+    def on_error(self, bus, message):
+        if self.currentConnection is not None:
+            self.disconnect()
+
+
 
 class Pipeline(object):
     def __init__(self):
@@ -25,7 +63,7 @@ class Pipeline(object):
         pipelineTemplate = """
         rtpbin name=rtpbin 
         
-        filesrc location=/mnt/media/videowall-videos/19.mp4
+        intervideosrc channel=video
         ! decodebin
         ! queue max-size-time=0 max-size-buffers=0 max-size-bytes=1073741274 min-threshold-bytes=1000000
         ! videoconvert
