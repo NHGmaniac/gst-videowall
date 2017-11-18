@@ -34,7 +34,7 @@ class SyncStream(object):
         # initialize subsystem
         self.log.debug('creating A/V-Pipeline')
         self.pipeline = Pipeline()
-        self.source = TCPSource()
+        self.source = TCPSource(9999)
 
     def run(self):
         self.pipeline.configure()
