@@ -29,7 +29,7 @@ class TCPSource(TCPSingleConnection):
         ! matroskademux name=demux
         ! intervideosink channel=video
         """
-        self.pipeline = Gst.parse_launch(pipeline.format(self.fd))
+        self.pipeline = Gst.parse_launch(pipeline.format(fd=self.fd))
         self.pipeline.bus.add_signal_watch()
         self.pipeline.bus.connect("message::eos", self.on_eos)
         self.pipeline.bus.connect("message::error", self.on_error)
