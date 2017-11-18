@@ -79,7 +79,7 @@ class Pipeline(object):
         mq.
         ! videocrop left={left} top={top} right={right} bottom={bottom}
         ! queue max-size-time=0 max-size-buffers=0 max-size-bytes=1073741274
-        ! x264enc speed-preset={speed} option-string="{option_string}" tune=zerolatency intra-refresh=true quantizer=16 pass=5
+        ! x264enc speed-preset={speed} option-string="{option_string}" tune=zerolatency intra-refresh=true quantizer=30 pass=5
         ! rtph264pay 
         ! rtpbin.send_rtp_sink_{id}
         
