@@ -27,7 +27,7 @@ class Pipeline(object):
         
         filesrc location=/mnt/media/videowall-videos/19.mp4
         ! decodebin
-        ! queue max-size-time=0 max-size-buffers=0 max-size-bytes=1073741274
+        ! queue max-size-time=0 max-size-buffers=0 max-size-bytes=1073741274 min-threshold-bytes=1000000
         ! videoconvert
         ! videoscale
         ! capsfilter caps="video/x-raw, width={width}, height={height}"
