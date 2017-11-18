@@ -61,7 +61,7 @@ class Pipeline(object):
     def configure(self):
         self.pipeline = None
         pipelineTemplate = """
-        rtpbin name=rtpbin 
+        rtpbin name=rtpbin max-rtcp-rtp-time-diff=500
         
         intervideosrc channel=video
         ! decodebin
