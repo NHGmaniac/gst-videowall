@@ -32,19 +32,7 @@ class Pipeline(object):
         ! videoscale
         ! capsfilter caps="video/x-raw, width={width}, height={height}"
         ! tee name=t
-        ! multiqueue name=mq
-        ! x264enc speed-preset={speed} option-string="{option_string}" tune=zerolatency
-        ! rtph264pay 
-        ! rtpbin.send_rtp_sink_0
-        
-        rtpbin.send_rtp_src_0 
-        ! udpsink port={preview_rtp_port} host={preview_host}
-        
-        rtpbin.send_rtcp_src_0
-        ! udpsink port={preview_rtcp_send_port} sync=false async=false host={preview_host}
-
-        udpsrc port={preview_rtcp_recv_port} 
-        ! rtpbin.recv_rtcp_sink_0
+        multiqueue name=mq
         """
 
         monitorTemplate = """
@@ -54,7 +42,6 @@ class Pipeline(object):
         ! videocrop left={left} top={top} right={right} bottom={bottom}
         ! x264enc speed-preset={speed} option-string="{option_string}" tune=zerolatency intra-refresh=true quantizer=30 pass=5
         ! rtph264pay 
-        ! queue max-size-buffers=0 max-size-time=0 max-size-bytes=1048576000
         ! rtpbin.send_rtp_sink_{id}
         
         rtpbin.send_rtp_src_{id}
