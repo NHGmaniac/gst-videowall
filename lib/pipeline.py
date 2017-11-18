@@ -17,7 +17,7 @@ class Pipeline(object):
         self.log = logging.getLogger('Pipeline')
         self.mm = MonitorManager()
         self.mm.load()
-        self.speed = "ultrafast"
+        self.speed = "fast"
         self.option_string = "keyint=1"
 
     def configure(self):
@@ -25,7 +25,7 @@ class Pipeline(object):
         pipelineTemplate = """
         rtpbin name=rtpbin 
         
-        filesrc location=/mnt/media/videowall-videos/24.mp4
+        filesrc location=/mnt/media/videowall-videos/19.mp4
         ! decodebin
         ! queue max-size-time=0 max-size-buffers=0 max-size-bytes=1073741274
         ! videoconvert
