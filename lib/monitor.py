@@ -126,7 +126,9 @@ class MonitorManager:
         physicalHeight = self.getMaxKey(lambda m: m.physicalOffsetY + m.physicalHeight + m.physicalBorderHeight)
         virtualWidth, virtualHeight = self.getRenderTargetScreen()
 
-        return monitor.getCrop((physicalWidth, physicalHeight), (virtualWidth, virtualHeight))
+        (l,t,r,b) = monitor.getCrop((physicalWidth, physicalHeight), (virtualWidth, virtualHeight))
+        #Shitty videocrop can only handle even values....
+        return l-(l%2), t-(t%2), r-(r%2),b-(b%2)
 
     def getMonitorResolution(self, id):
         monitor = self.getMonitor(id)
