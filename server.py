@@ -84,7 +84,7 @@ def run_server():
 
 # run mainclass
 def main():
-    global conf
+    global conf, macMapping, hostAddress
     # configure logging
     docolor = (Args.color == 'always') or (Args.color == 'auto' and sys.stderr.isatty())
 
