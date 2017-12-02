@@ -11,7 +11,6 @@ macMapping = {}
 hostAddress = "10.128.9.121"
 
 monitorManager = MonitorManager()
-monitorManager.load()
 
 syncstream = None
 conf = None
@@ -25,9 +24,9 @@ def add_device(mac, ip):
 
 def startProcess():
     global syncstream
+    monitorManager.save()
     if syncstream:
         syncstream.kill()
-    monitorManager.save()
     syncstream = subprocess.Popen(["./syncstream.py"])
 
 
