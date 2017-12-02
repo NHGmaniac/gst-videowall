@@ -137,7 +137,7 @@ class MonitorManager:
             os.mkdir("./config")
         with open("./config/monitors", "w") as f:
             data = list(map(lambda m: m.save(), self.monitors))
-            json.dump(self.monitors, data)
+            json.dump(data, f)
 
     def load(self):
         if os.path.exists("./config"):
