@@ -2,6 +2,9 @@ import json
 import os
 
 
+def even(x):
+    return x - (x % 2)
+
 class Monitor:
     def __init__(self, **kwargs):
         self.load(kwargs)
@@ -61,8 +64,8 @@ class Monitor:
         dpiY = self.virtualHeight/self.physicalHeight
 
         return (
-            dpiX*(self.physicalOffsetX + self.physicalBorderWidth),
-            dpiY*(self.physicalOffsetY + self.physicalBorderHeight)
+            even(dpiX*(self.physicalOffsetX + self.physicalBorderWidth)),
+            even(dpiY*(self.physicalOffsetY + self.physicalBorderHeight))
         )
 
 
@@ -107,15 +110,15 @@ class MonitorManager:
         return max(map(func, self.monitors))
 
     def getPhysicalWidth(self):
-        return self.getMaxKey(lambda m: m.physicalWidth + m.physicalOffsetX, 1920)
+        return even(self.getMaxKey(lambda m: m.physicalWidth + m.physicalOffsetX, 1920))
 
     def getPhysicalHeight(self):
-        return self.getMaxKey(lambda m: m.physicalHeight + m.physicalOffsetY, 1080)
+        return even(self.getMaxKey(lambda m: m.physicalHeight + m.physicalOffsetY, 1080))
 
     def getRenderTargetScreen(self):
         w = self.targetwidth
         h = self.lerp(self.targetwidth, self.getPhysicalWidth(), self.getPhysicalHeight())
-        return w, h
+        return even(w), even(h)
 
     def lerp(self, x, width_src, width_tgt):
         return int(x * (width_tgt / width_src))
@@ -126,13 +129,13 @@ class MonitorManager:
         physicalHeight = self.getMaxKey(lambda m: m.physicalOffsetY + m.physicalHeight + m.physicalBorderHeight)
         virtualWidth, virtualHeight = self.getRenderTargetScreen()
 
-        (l,t,r,b) = monitor.getCrop((physicalWidth, physicalHeight), (virtualWidth, virtualHeight))
+        (l,t,r,b) = monitor.getCrop((even(physicalWidth), even(physicalHeight)), (even(virtualWidth), even(virtualHeight)))
         #Shitty videocrop can only handle even values....
-        return l-(l%2), t-(t%2), r-(r%2),b-(b%2)
+        return even(l), even(t), even(r), even(b)
 
     def getMonitorResolution(self, id):
         monitor = self.getMonitor(id)
-        return monitor.virtualWidth, monitor.virtualHeight
+        return even(monitor.virtualWidth), even(monitor.virtualHeight)
 
     def save(self):
         if not os.path.exists("./config"):
