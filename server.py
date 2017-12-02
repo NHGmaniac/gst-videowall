@@ -84,6 +84,7 @@ def run_server():
 
 # run mainclass
 def main():
+    global conf
     # configure logging
     docolor = (Args.color == 'always') or (Args.color == 'auto' and sys.stderr.isatty())
 
