@@ -14,7 +14,7 @@ monitorManager = MonitorManager()
 monitorManager.load()
 
 syncstream = None
-
+conf = None
 
 def add_device(mac, ip):
     if monitorManager.hasMonitor(mac):
@@ -34,8 +34,8 @@ def startProcess():
 class auto_configure_RequestHandler(http.server.BaseHTTPRequestHandler):
     # GET
     def do_GET(self):
-	    conf.load()
-	    macMapping = conf["macMapping"]
+        conf.load()
+        macMapping = conf["macMapping"]
         data = self.path
         if not data:
             self.send_response(418, "I'm a teapot")
