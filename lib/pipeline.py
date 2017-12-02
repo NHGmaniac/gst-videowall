@@ -102,7 +102,7 @@ class Pipeline(object):
                                            preview_rtcp_recv_port="30000")
         for monitorid in self.mm.iterids():
             l, t, r, b = self.mm.getMonitorCropRect(monitorid)
-            self.log.debug("" + l + " " + t + " " + r + " " + b + " " + monitorid)
+            self.log.debug("" + str(l) + " " + str(t) + " " + str(r) + " " + str(b) + " " + str(monitorid))
             size = self.mm.getMonitorResolution(monitorid)
             pipeline += monitorTemplate.format(left=l, top=t, right=r, bottom=b,
                                                width=size[0], height=size[1], speed=self.speed,
