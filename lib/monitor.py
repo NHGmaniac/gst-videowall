@@ -37,8 +37,8 @@ class Monitor:
         renderWidth = virtualMonitorSize[0]
         renderHeight = virtualMonitorSize[1]
 
-        dpiX = renderWidth/self.physicalWidth
-        dpiY = renderHeight/self.physicalHeight
+        dpiX = renderWidth/(self.physicalWidth-2*self.physicalBorderWidth)
+        dpiY = renderHeight/(self.physicalHeight-2*self.physicalBorderHeight)
 
         borderWidth = self.physicalBorderWidth*dpiX
         borderHeight = self.physicalBorderHeight*dpiY
