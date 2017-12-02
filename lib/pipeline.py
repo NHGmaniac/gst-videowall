@@ -63,8 +63,8 @@ class Pipeline(object):
         pipelineTemplate = """
         rtpbin name=rtpbin max-rtcp-rtp-time-diff=250 latency=2000
         
-        intervideosrc channel=video
-        ! decodebin
+
+        videotestsrc
         ! queue max-size-time=0 max-size-buffers=0 max-size-bytes=173741274 min-threshold-bytes=1000000
         ! videoconvert
         ! videoscale
