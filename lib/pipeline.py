@@ -61,7 +61,7 @@ class Pipeline(object):
     def configure(self):
         self.pipeline = None
         pipelineTemplate = """
-        rtpbin name=rtpbin max-rtcp-rtp-time-diff=250
+        rtpbin name=rtpbin max-rtcp-rtp-time-diff=250 latency=2000
         
         intervideosrc channel=video
         ! decodebin
