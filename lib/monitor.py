@@ -40,8 +40,8 @@ class Monitor:
         dpiX = renderWidth/(self.physicalWidth-2*self.physicalBorderWidth)
         dpiY = renderHeight/(self.physicalHeight-2*self.physicalBorderHeight)
 
-        borderWidth = self.physicalBorderWidth*dpiX
-        borderHeight = self.physicalBorderHeight*dpiY
+        borderWidth = self.physicalBorderWidth*dpiX*0.5
+        borderHeight = self.physicalBorderHeight*dpiY*0.5
         (l, t, r, b) = self.getCropWithoutBorders(physicalMonitorSize, virtualMonitorSize)
 
         return (int(l + borderWidth), int(t + borderHeight), int(r + borderWidth), int(b + borderHeight))
