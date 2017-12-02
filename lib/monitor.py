@@ -41,7 +41,7 @@ class Monitor:
         borderHeight = self.physicalBorderHeight*dpiY
         (l, t, r, b) = self.getCropWithoutBorders(physicalMonitorSize, virtualMonitorSize)
 
-        return (int(l + borderWidth), int(t + borderHeight), int(r + 2 * borderWidth), int(b + 2 * borderHeight))
+        return (int(l + borderWidth), int(t + borderHeight), int(r + borderWidth), int(b + borderHeight))
 
     def getCropWithoutBorders(self, physicalMonitorSize, virtualMonitorSize):
         physicalMonitorWidth = physicalMonitorSize[0]
