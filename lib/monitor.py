@@ -52,8 +52,8 @@ class Monitor:
 
         l = self.lerp(self.physicalOffsetX, physicalMonitorWidth, renderWidth)
         t = self.lerp(self.physicalOffsetY, physicalMonitorHeight, renderHeight)
-        r = renderWidth - self.lerp(self.physicalOffsetX, physicalMonitorWidth, renderWidth)
-        b = renderHeight - self.lerp(self.physicalOffsetY, physicalMonitorHeight, renderHeight)
+        r = renderWidth - self.lerp(self.physicalOffsetX+self.physicalWidth, physicalMonitorWidth, renderWidth)
+        b = renderHeight - self.lerp(self.physicalOffsetY+self.physicalHeight, physicalMonitorHeight, renderHeight)
         return l, t, r, b
 
     def getVirtualOffset(self):
