@@ -73,8 +73,10 @@ class MonitorManager:
 
     def addMonitor(self, monitor):
         if not isinstance(monitor, Monitor):
+	        monitor["index"] = len(self.monitors) + 1
             monitor = Monitor(**monitor)
         self.monitors.append(monitor)
+        return monitor["index"]
 
     def replaceMonitor(self, mac, ip):
         for monitor in self.monitors:

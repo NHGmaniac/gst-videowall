@@ -19,9 +19,9 @@ syncstream = None
 def add_device(mac, ip):
     if monitorManager.hasMonitor(mac):
         return monitorManager.replaceMonitor(mac, ip)
-    id = len(monitorManager.monitors) + 1
-    monitorManager.addMonitor(id, *macMapping[mac], mac, ip)
-    return id
+    monitorconf = macMapping[mac]
+    monitorconf["ip"] = ip
+    return monitorManager.addMonitor(monitorconf)
 
 def startProcess():
     global syncstream
