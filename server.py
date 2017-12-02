@@ -2,27 +2,14 @@
 import logging, sys
 import http.server
 import subprocess
+import lib.config as config
+from lib.config import loadconfig
 from lib.loghandler import LogHandler
 from lib.args import Args
 from lib.monitor import MonitorManager
-macMapping = {
-            "b8:27:eb:3f:3e:49": (0, 0, 1280, 1024),
-            "b8:27:eb:7e:66:7d": (0, 1024, 1280, 1024),
-            "b8:27:eb:94:22:1b": (0, 2048, 1280, 1024),
-
-            "b8:27:eb:c7:e3:53": (1280, 0, 1280, 1024),
-            "b8:27:eb:ab:7c:8e": (1280, 1024, 1280, 1024),
-            "b8:27:eb:01:e0:da": (1280, 2048, 1280, 1024),
-
-            "b8:27:eb:1b:99:2e": (2560, 0, 1280, 1024),
-            "b8:27:eb:04:bf:2a": (2560, 1024, 1280, 1024),
-            "b8:27:eb:f6:0c:00": (2560, 2048, 1280, 1024)
-
-        }
-
-
-
+macMapping = {}
 hostAddress = "10.128.9.121"
+
 monitorManager = MonitorManager()
 monitorManager.load()
 
@@ -47,8 +34,8 @@ def startProcess():
 class auto_configure_RequestHandler(http.server.BaseHTTPRequestHandler):
     # GET
     def do_GET(self):
-
-
+	    conf.load()
+	    macMapping = conf["macMapping"]
         data = self.path
         if not data:
             self.send_response(418, "I'm a teapot")
@@ -113,6 +100,13 @@ def main():
     level = logging.DEBUG
 
     logging.root.setLevel(level)
+
+    #load config
+    conf = loadconfig("config.json")
+    macMapping = conf["macMapping"]
+    hostAddress = conf["hostAddress"]
+
+    #start server
     startProcess()
     run_server()
 
