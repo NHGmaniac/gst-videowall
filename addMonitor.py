@@ -24,7 +24,7 @@ def main():
 	vals["virtualWidth"] = args.pW
 	vals["virtualHeight"] = args.pH
 	vals["physicalOffsetX"] = args.x * 1280 
-	vals["physicalOffsetX"] = args.y * 1024 
+	vals["physicalOffsetY"] = args.y * 1024
 	macMapping[args.mac] = vals
 	conf["macMapping"] = macMapping
 

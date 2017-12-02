@@ -152,31 +152,32 @@ class MonitorManager:
 
 if __name__ == '__main__':
     mm = MonitorManager()
-    mm.addMonitor({
-        "index":0,
-        "ip":"127.0.0.1",
-        "physicalWidth":20,
-        "physicalHeight": 10,
-        "physicalOffsetX":0,
-        "physicalOffsetY":0,
-        "physicalBorderWidth":1,
-        "physicalBorderHeight":1,
-        "virtualWidth":1280,
-        "virtualHeight":1024,
-    })
-    mm.addMonitor({
-        "index":1,
-        "ip":"127.0.0.1",
-        "physicalWidth":20,
-        "physicalHeight": 10,
-        "physicalOffsetX":0,
-        "physicalOffsetY":10,
-        "physicalBorderWidth":1,
-        "physicalBorderHeight":1,
-        "virtualWidth":1280,
-        "virtualHeight":1024,
-    })
+    mm.load()
+    print(mm.monitors)
+    # mm.addMonitor({
+    #     "index":0,
+    #     "ip":"127.0.0.1",
+    #     "physicalWidth":20,
+    #     "physicalHeight": 10,
+    #     "physicalOffsetX":0,
+    #     "physicalOffsetY":0,
+    #     "physicalBorderWidth":1,
+    #     "physicalBorderHeight":1,
+    #     "virtualWidth":1280,
+    #     "virtualHeight":1024,
+    # })
+    # mm.addMonitor({
+    #     "index":1,
+    #     "ip":"127.0.0.1",
+    #     "physicalWidth":20,
+    #     "physicalHeight": 10,
+    #     "physicalOffsetX":0,
+    #     "physicalOffsetY":10,
+    #     "physicalBorderWidth":1,
+    #     "physicalBorderHeight":1,
+    #     "virtualWidth":1280,
+    #     "virtualHeight":1024,
+    # })
     print(mm.getRenderTargetScreen())
-    print(mm.getMonitorCropRect(0))
-    print(mm.getMonitorCropRect(1))
-    #print(mm.getMonitorCropRect(2))
+    for m in mm.iterids():
+        print(mm.getMonitorCropRect(m))
