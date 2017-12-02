@@ -7,6 +7,7 @@ from lib.tcpsingleconnection import TCPSingleConnection
 # import library components
 from lib.monitor import MonitorManager
 
+
 #        udpsrc port=9999 caps="application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)H264, packetization-mode=(string)1, profile-level-id=(string)640028, payload=(int)96, ssrc=(uint)3042026353, timestamp-offset=(uint)1763490137, seqnum-offset=(uint)614, a-framerate=(string)25"
 #        ! rtph264depay
 #        ! decodebin
@@ -47,7 +48,6 @@ class TCPSource(TCPSingleConnection):
     def on_error(self, bus, message):
         if self.currentConnection is not None:
             self.disconnect()
-
 
 
 class Pipeline(object):
@@ -100,23 +100,22 @@ class Pipeline(object):
                                            preview_rtp_port="10000",
                                            preview_rtcp_send_port="20000",
                                            preview_rtcp_recv_port="30000")
-        for monitorid in self.mm.monitors.keys():
-            rect = self.mm.getMonitorCropRect(monitorid)
-            size = self.mm.getMonitorSize(monitorid)
-            pipeline += monitorTemplate.format(left=rect[0], top=rect[1], right=rect[2], bottom=rect[3],
+        for monitorid in self.mm.iterids():
+            l, t, r, b = self.mm.getMonitorCropRect(monitorid)
+            size = self.mm.getMonitorResolution(monitorid)
+            pipeline += monitorTemplate.format(left=l, top=t, right=r, bottom=b,
                                                width=size[0], height=size[1], speed=self.speed,
                                                option_string=self.option_string,
-                                               host=self.mm.monitorHosts[monitorid][1],
-                                               rtp_port="{}".format(10000+monitorid),
-                                               rtcp_send_port="{}".format(20000+monitorid),
-                                               rtcp_recv_port="{}".format(30000+monitorid),
+                                               host=self.mm.getMonitor(monitorid).ip,
+                                               rtp_port="{}".format(10000 + monitorid),
+                                               rtcp_send_port="{}".format(20000 + monitorid),
+                                               rtcp_recv_port="{}".format(30000 + monitorid),
                                                id=monitorid)
 
         self.log.debug("Generated Pipeline")
         self.log.debug(pipeline)
 
         self.pipeline = Gst.parse_launch(pipeline)
-
 
     def start(self):
         self.log.info('Starting Pipeline')
