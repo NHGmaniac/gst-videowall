@@ -65,7 +65,7 @@ class Pipeline(object):
         
         intervideosrc channel=video
         ! decodebin
-        ! queue max-size-time=0 max-size-buffers=0 max-size-bytes=1073741274 min-threshold-bytes=1000000
+        ! queue max-size-time=0 max-size-buffers=0 max-size-bytes=173741274 min-threshold-bytes=1000000
         ! videoconvert
         ! videoscale
         ! capsfilter caps="video/x-raw, width={width}, height={height}"
@@ -78,7 +78,7 @@ class Pipeline(object):
         ! mq.
         mq.
         ! videocrop left={left} top={top} right={right} bottom={bottom}
-        ! queue max-size-time=0 max-size-buffers=0 max-size-bytes=1073741274
+        ! queue max-size-time=0 max-size-buffers=0 max-size-bytes=173741274
         ! x264enc speed-preset={speed} option-string="{option_string}" tune=zerolatency intra-refresh=true quantizer=30 pass=5
         ! rtph264pay 
         ! rtpbin.send_rtp_sink_{id}
