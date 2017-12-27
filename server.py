@@ -8,7 +8,7 @@ from lib.loghandler import LogHandler
 from lib.args import Args
 from lib.monitor import MonitorManager
 macMapping = {}
-hostAddress = "10.128.9.121"
+hostAddress = "derguhl.de"
 
 monitorManager = MonitorManager()
 
@@ -16,6 +16,7 @@ syncstream = None
 conf = None
 
 def add_device(mac, ip):
+    print("+++",mac,ip)
     if monitorManager.hasMonitor(mac):
         return monitorManager.replaceMonitor(mac, ip)
     monitorconf = macMapping[mac]
@@ -76,7 +77,7 @@ class auto_configure_RequestHandler(http.server.BaseHTTPRequestHandler):
 def run_server():
     logging.getLogger('ConfigServer').info('starting server...')
 
-    server_address = (hostAddress, 8081)
+    server_address = ("127.0.0.1", 8081)
     httpd = http.server.HTTPServer(server_address, auto_configure_RequestHandler)
 
     logging.getLogger('ConfigServer').info('running server...')
