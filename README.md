@@ -1,6 +1,7 @@
 # gst-videowall
 
-This project is used to display any video across multiple monitors.
+This project is used to display any video across multiple monitors using commodity hardware and software.
+Playback and syncronisation is mostly done using GStreamer.
 
 # Requirements
 
