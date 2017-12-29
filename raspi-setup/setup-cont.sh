@@ -5,7 +5,7 @@ chmod +x /usr/share/raspi-setup/setup.sh
 passwd -d pi
 update_file="/etc/gst-videowall/update-done"
 file_time=$(stat --format='+%Y' "$update_file")
-current_time=$(( date +%s ))
+current_time=$( date +%s )
 if (( file_time < ( current_time - ( 60 * 60) ) )); then
     sh -c "TERM=linux echo $update_file is older than 1 hour > /dev/tty0"
     until sh -c "TERM=linux apt update > /dev/tty0"; do
