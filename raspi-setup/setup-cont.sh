@@ -13,7 +13,7 @@ if (( file_time < ( current_time - ( 60 * 60) ) )); then
         sleep 10
     done
     sh -c "TERM=linux echo Finished Update... >/dev/tty0"
-    until sh -c "TERM=linux apt install -y bc git gstreamer1.0-plugins-base gstreamer1.0-plugins-bad gstreamer1.0-tools omxplayer gstreamer1.0-plugins-good figlet dnsutils vim-nox bmon > /dev/tty0"; do
+    until sh -c "TERM=linux apt install -y bc git gstreamer1.0-plugins-base gstreamer1.0-plugins-bad gstreamer1.0-tools omxplayer gstreamer1.0-plugins-good figlet dnsutils > /dev/tty0"; do
         sh -c "TERM=linux echo Failed Install... >/dev/tty0"
         sleep 10
     done
@@ -54,4 +54,5 @@ done
 sh -c "TERM=linux echo ID Assignement Successful >/dev/tty0"
 sh -c "TERM=linux cat /etc/gst-videowall/config >/dev/tty0"
 sleep 10
+sh -c "TERM=linux ./update-dns.sh $(cat /etc/gst-videowall/config) > /dev/tty0"
 ./gst-recv-pi.sh $(cat /etc/gst-videowall/config)
