@@ -64,6 +64,7 @@ class Pipeline(object):
         rtpbin name=rtpbin max-rtcp-rtp-time-diff=50 latency=2000
         
         
+        
         intervideosrc channel=video
         ! decodebin
         ! queue max-size-time=0 max-size-buffers=0 max-size-bytes=173741274 min-threshold-bytes=1000000
@@ -71,16 +72,19 @@ class Pipeline(object):
         ! videoscale
         ! capsfilter caps="video/x-raw, width={width}, height={height}"
         ! textoverlay text="github.com/\r\nNHGmaniac/\r\ngst-videowall" valignment=top halignment=left xpad=100 ypad=100 font-desc="Sans, 12" shaded-background=yes
-        ! videomixer name=mix sink_1::ypos={offsetlogo} sink_1::alpha=0.7
+        ! videomixer name=mix sink_0::xpos=0 sink_1::ypos={offsetlogo} sink_0::alpha=1 sink_1::alpha=0.7
         ! tee name=t
-        
-        multiqueue name=mq
         
         filesrc location={logo}
         ! decodebin
         ! imagefreeze
-        ! video/x-raw, width=320, height=240
+        ! videoconvert
+        ! videoscale
+        ! capsfilter caps="video/x-raw, width=320, height=240"
         ! mix.
+        
+        
+        multiqueue name=mq
         """
 
         monitorTemplate = """
@@ -111,7 +115,7 @@ class Pipeline(object):
                                            preview_rtcp_send_port="20000",
                                            preview_rtcp_recv_port="30000",
                                            offsetlogo=self.mm.getRenderTargetScreen()[0]-420,
-                                           logo="./nnev.png"
+                                           logo="/home/niels/PycharmProjects/gst-videowall/nnev.png"
                                            )
         for monitorid in self.mm.iterids():
             l, t, r, b = self.mm.getMonitorCropRect(monitorid)
