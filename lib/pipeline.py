@@ -69,7 +69,7 @@ class Pipeline(object):
         ! videoconvert
         ! videoscale
         ! capsfilter caps="video/x-raw, width={width}, height={height}"
-        ! textoverlay text="github.com/NHGmaniac/gst-videowall" valignment=top halignment=left font-desc="Sans, 72" shaded-background=yes
+        ! textoverlay text="github.com/NHGmaniac/gst-videowall" valignment=top halignment=left font-desc="Sans, 12" shaded-background=yes
         ! tee name=t
         multiqueue name=mq
         """
