@@ -16,7 +16,6 @@ syncstream = None
 conf = None
 
 def add_device(mac, ip):
-    print("+++",mac,ip)
     if monitorManager.hasMonitor(mac):
         return monitorManager.replaceMonitor(mac, ip)
     monitorconf = macMapping[mac]
