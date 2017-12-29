@@ -76,8 +76,8 @@ class Pipeline(object):
         
         multiqueue name=mq
         
-        filesrc location=nnev.png
-        ! pngdec
+        filesrc location={logo}
+        ! decodebin
         ! imagefreeze
         ! video/x-raw, width=320, height=240
         ! mix.
@@ -110,7 +110,9 @@ class Pipeline(object):
                                            preview_rtp_port="10000",
                                            preview_rtcp_send_port="20000",
                                            preview_rtcp_recv_port="30000",
-                                           offsetlogo=self.mm.getRenderTargetScreen()[0]-420)
+                                           offsetlogo=self.mm.getRenderTargetScreen()[0]-420,
+                                           logo="./nnev.png"
+                                           )
         for monitorid in self.mm.iterids():
             l, t, r, b = self.mm.getMonitorCropRect(monitorid)
             self.log.debug("" + str(l) + " " + str(t) + " " + str(r) + " " + str(b) + " " + str(monitorid))
