@@ -3,17 +3,21 @@ sleep 10
 curl https://raw.githubusercontent.com/NHGmaniac/gst-videowall/master/raspi-setup/setup.sh -o /usr/share/raspi-setup/setup.sh
 chmod +x /usr/share/raspi-setup/setup.sh
 passwd -d pi
-if [ ! -f "/etc/gst-videowall/update-done" ]; then
-    until apt update; do
+update_file="/etc/gst-videowall/update-done"
+file_time=$(stat --format='+%Y' "$update_file")
+current_time=$(( date +%s ))
+if (( file_time < ( current_time - ( 60 * 60) ) )); then
+    sh -c "TERM=linux echo $update_file is older than 1 hour > /dev/tty0"
+    until sh -c "TERM=linux apt update > /dev/tty0"; do
         sh -c "TERM=linux echo update failed... >/dev/tty0"
         sleep 10
     done
     sh -c "TERM=linux echo Finished Update... >/dev/tty0"
-    until apt install -y bc git gstreamer1.0-plugins-base gstreamer1.0-plugins-bad gstreamer1.0-tools omxplayer gstreamer1.0-plugins-good figlet; do
+    until sh -c "TERM=linux apt install -y bc git gstreamer1.0-plugins-base gstreamer1.0-plugins-bad gstreamer1.0-tools omxplayer gstreamer1.0-plugins-good figlet dnsutils vim-nox bmon > /dev/tty0"; do
         sh -c "TERM=linux echo Failed Install... >/dev/tty0"
         sleep 10
     done
-    touch /etc/gst-videowall/update-done
+    touch $update_file
 else
     sh -c "TERM=linux echo Skipped Install >/dev/tty0"
 fi
