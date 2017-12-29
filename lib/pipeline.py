@@ -80,10 +80,10 @@ class Pipeline(object):
         ! imagefreeze
         ! videoconvert
         ! videoscale
-        ! capsfilter caps="video/x-raw, width=1920, framerate=1/1"
+        ! capsfilter caps="video/x-raw, format=I420, width=1920, framerate=1/1"
         ! mix.        
         
-        multiqueue name=mq
+        multiqueue name=mq        
         """
 
         monitorTemplate = """
