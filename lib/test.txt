@@ -1,0 +1,26 @@
+        rtpbin name=rtpbin max-rtcp-rtp-time-diff=50 latency=2000
+
+        testvideosrc
+        ! queue max-size-time=0 max-size-buffers=0 max-size-bytes=173741274 min-threshold-bytes=1000000
+        ! videoconvert
+        ! videoscale
+        ! capsfilter caps="video/x-raw, width=1920, height=1080"
+        ! textoverlay text="github.com/
+NHGmaniac/
+gst-videowall" valignment=top halignment=left xpad=100 ypad=100 font-desc="Sans, 12" shaded-background=yes
+        ! compositor name=mix sink_1::ypos=100 sink_1::xpos=1500 sink_1::width=320 sink_1::height=100
+        ! videoconvert
+        ! capsfilter caps="video/x-raw, format=RGB"
+        ! tee name=t
+
+        t. ! autovideosink
+
+        filesrc location=nnev.png
+        ! decodebin
+        ! imagefreeze
+        ! videoconvert
+        ! videoscale
+        ! capsfilter caps="video/x-raw, format=I420, width=1920, framerate=1/1"
+        ! mix.
+
+        multiqueue name=mq

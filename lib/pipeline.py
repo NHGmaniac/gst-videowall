@@ -70,18 +70,7 @@ class Pipeline(object):
         ! videoscale
         ! capsfilter caps="video/x-raw, width={width}, height={height}"
         ! textoverlay text="github.com/\r\nNHGmaniac/\r\ngst-videowall" valignment=top halignment=left xpad=100 ypad=100 font-desc="Sans, 12" shaded-background=yes
-        ! compositor name=mix sink_1::ypos=100 sink_1::xpos={offsetlogo} sink_1::width=320 sink_1::height=100
-        ! capsfilter caps="video/x-raw, format=I420"
-        ! videoconvert
-        ! tee name=t
-                
-        filesrc location={logo}
-        ! decodebin
-        ! imagefreeze
-        ! videoconvert
-        ! videoscale
-        ! capsfilter caps="video/x-raw, format=I420, width=1920, framerate=1/1"
-        ! mix.        
+        ! tee name=t     
         
         multiqueue name=mq        
         """
