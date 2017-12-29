@@ -63,13 +63,13 @@ class Pipeline(object):
         pipelineTemplate = """
         rtpbin name=rtpbin max-rtcp-rtp-time-diff=50 latency=2000
         
-
         intervideosrc channel=video
         ! decodebin
         ! queue max-size-time=0 max-size-buffers=0 max-size-bytes=173741274 min-threshold-bytes=1000000
         ! videoconvert
         ! videoscale
         ! capsfilter caps="video/x-raw, width={width}, height={height}"
+        ! textoverlay text="github.com/NHGmaniac/gst-videowall" valignment=top halignment=left font-desc="Sans, 72" shaded-background=yes
         ! tee name=t
         multiqueue name=mq
         """
