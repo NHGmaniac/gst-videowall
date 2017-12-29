@@ -71,10 +71,10 @@ class Pipeline(object):
         ! capsfilter caps="video/x-raw, width={width}, height={height}"
         ! textoverlay text="github.com/\r\nNHGmaniac/\r\ngst-videowall" valignment=top halignment=left xpad=100 ypad=100 font-desc="Sans, 12" shaded-background=yes
         ! compositor name=mix sink_1::ypos=100 sink_1::xpos={offsetlogo} sink_1::width=320 sink_1::height=100
+        ! capsfilter caps="video/x-raw, format=I420"
+        ! videoconvert
         ! tee name=t
-        
-        t. ! autovideosink
-        
+                
         filesrc location={logo}
         ! decodebin
         ! imagefreeze
