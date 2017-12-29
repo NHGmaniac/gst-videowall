@@ -27,6 +27,24 @@ Playback and syncronisation is mostly done using GStreamer.
 - clone this repo
 - execute raspi-setup/setup.py
 
+# How is it working?
+
+1. Send some data (i.e. testsrc/randomfile.sh) to the uninteruptable input handler (Port 9999)
+2. The handler than proceeds to resize the input to fit a virtual canvas spanning all registered monitors (config.json).
+3. Then the render server crops the correct area for each monitor from the virtual canvas (leaving out borders).
+4. Encode the n sub videos in h264 (best format for raspi) and send via RTP
+5. Clients and Server sync them selves via RTCP (sending current frame + timestamp + length of queue)
+6. Clients buffer video for some time
+7.1. Native clients decode and play directly on framebuffer
+7.2. Rapi clients pass the video for accelerated decoding/playback to OMX-Player (where we can no longer guarantee sync)
+
+
+TestSrc => Port 9999
+RandomFile => Port 9999
+
+Uninteruptable Input (9999) => Split + Resize to virtual canvas + Cut out display area => Send to raspi via rtp
+Raspi + Server Sync via RTCP
+
 # TODO
 - Better documentation
 - Remove config files + make it portable
