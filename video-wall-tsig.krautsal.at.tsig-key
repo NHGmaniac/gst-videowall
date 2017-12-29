@@ -1,0 +1,4 @@
+key "video-wall-tsig.krautsal.at." {
+	algorithm hmac-sha256;
+	secret "p84AgbQp8DYF/ZI1DMtZslu4BM5sUE6UNyxuv6WwTUk=";
+};
