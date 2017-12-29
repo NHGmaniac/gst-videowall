@@ -72,7 +72,7 @@ class Pipeline(object):
         ! videoscale
         ! capsfilter caps="video/x-raw, width={width}, height={height}"
         ! textoverlay text="github.com/\r\nNHGmaniac/\r\ngst-videowall" valignment=top halignment=left xpad=100 ypad=100 font-desc="Sans, 12" shaded-background=yes
-        ! videomixer name=mix sink_0::xpos=0 sink_1::ypos={offsetlogo} sink_0::alpha=1 sink_1::alpha=0.7
+        ! compositor name=mix sink_0::xpos=0 sink_1::xpos={offsetlogo} sink_0::alpha=1 sink_1::alpha=0.7
         ! tee name=t
         
         filesrc location={logo}
@@ -80,9 +80,8 @@ class Pipeline(object):
         ! imagefreeze
         ! videoconvert
         ! videoscale
-        ! capsfilter caps="video/x-raw, width=320, height=240"
-        ! mix.
-        
+        ! video/x-raw, width=320
+        ! mix.        
         
         multiqueue name=mq
         """
