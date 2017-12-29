@@ -63,8 +63,6 @@ class Pipeline(object):
         pipelineTemplate = """
         rtpbin name=rtpbin max-rtcp-rtp-time-diff=50 latency=2000
         
-        
-        
         intervideosrc channel=video
         ! decodebin
         ! queue max-size-time=0 max-size-buffers=0 max-size-bytes=173741274 min-threshold-bytes=1000000
@@ -72,8 +70,10 @@ class Pipeline(object):
         ! videoscale
         ! capsfilter caps="video/x-raw, width={width}, height={height}"
         ! textoverlay text="github.com/\r\nNHGmaniac/\r\ngst-videowall" valignment=top halignment=left xpad=100 ypad=100 font-desc="Sans, 12" shaded-background=yes
-        ! compositor name=mix sink_1::ypos=100 sink_1::xpos={offsetlogo} sink_0::alpha=1 sink_1::alpha=0.7 sink_1::width=320 sink_1::height=100
+        ! compositor name=mix sink_1::ypos=100 sink_1::xpos={offsetlogo} sink_1::width=320 sink_1::height=100
         ! tee name=t
+        
+        t. ! autovideosink
         
         filesrc location={logo}
         ! decodebin
