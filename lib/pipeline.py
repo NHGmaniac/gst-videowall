@@ -84,7 +84,6 @@ class Pipeline(object):
         ! mix.        
         
         multiqueue name=mq
-        t. ! autovideosink
         """
 
         monitorTemplate = """
