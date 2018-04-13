@@ -57,12 +57,14 @@ class Pipeline(object):
         self.mm.load()
         self.speed = "medium"
         self.option_string = "keyint=1"
+        self.clock = None
+        self.pipeline = None
 
     def configure(self):
-        self.pipeline = None
         pipelineTemplate = """
         rtpbin name=rtpbin max-rtcp-rtp-time-diff=50 latency=2000
         
+
         intervideosrc channel=video
         ! decodebin
         ! queue max-size-time=0 max-size-buffers=0 max-size-bytes=173741274 min-threshold-bytes=1000000
@@ -72,7 +74,23 @@ class Pipeline(object):
         ! textoverlay text="github.com/\r\nNHGmaniac/\r\ngst-videowall" valignment=top halignment=left xpad=100 ypad=100 font-desc="Sans, 12" shaded-background=yes
         ! tee name=t     
         
-        multiqueue name=mq        
+        multiqueue name=mq
+        t.
+        ! mq.
+        mq.
+        ! queue max-size-time=0 max-size-buffers=0 max-size-bytes=1073741274
+        ! x264enc speed-preset=medium option-string="keyint=1" tune=zerolatency intra-refresh=true quantizer=30 pass=5
+        ! rtph264pay 
+        ! rtpbin.send_rtp_sink_0
+        
+        rtpbin.send_rtp_src_0
+        ! udpsink port={preview_rtp_port} host={preview_host}
+        
+        rtpbin.send_rtcp_src_0
+        ! udpsink port={preview_rtcp_send_port} sync=false async=false host={preview_host}
+        
+        udpsrc port={preview_rtcp_recv_port}
+        ! rtpbin.recv_rtcp_sink_0
         """
 
         monitorTemplate = """
@@ -98,7 +116,7 @@ class Pipeline(object):
                                            height=self.mm.getRenderTargetScreen()[1],
                                            speed=self.speed,
                                            option_string=self.option_string,
-                                           preview_host="10.128.9.47",
+                                           preview_host="127.0.0.1",
                                            preview_rtp_port="10000",
                                            preview_rtcp_send_port="20000",
                                            preview_rtcp_recv_port="30000",
@@ -122,6 +140,52 @@ class Pipeline(object):
         self.log.debug(pipeline)
 
         self.pipeline = Gst.parse_launch(pipeline)
+        self.clock = self.pipeline.get_clock()
+    def start(self):
+        self.log.info('Starting Pipeline')
+        self.pipeline.set_state(Gst.State.PLAYING)
+
+    def stop(self):
+        self.log.info('Stopping Pipeline')
+        self.pipeline.set_state(Gst.State.NULL)
+
+    def restart(self):
+        self.stop()
+        self.configure()
+        self.start()
+
+
+class RecvPipeline(object):
+    def __init__(self):
+        self.log = logging.getLogger('RecvPipeline')
+        self.clock = None
+        self.pipeline = None
+
+    def setclock(self, clock):
+        self.clock = clock
+        self.pipeline.set_clock(clock)
+
+    def configure(self):
+        pipelineTemplate = """
+        rtpbin name=rtpbin
+        
+        udpsrc caps="application/x-rtp, media=video, clock-rate=90000, encoding-name=H264"
+        port={rtp_port} ! rtpbin.recv_rtp_sink_0
+        
+        rtpbin. ! rtph264depay ! decodebin ! autovideosink
+        
+        udpsrc port={rtcp_recv_port} ! rtpbin.recv_rtcp_sink_0
+        
+        rtpbin.send_rtcp_src_0 ! udpsink port={rtcp_send_port} host={host} sync=false async=false
+        """
+
+        pipeline = pipelineTemplate.format(host='127.0.0.1',
+                                           rtp_port='10000', rtcp_recv_port='20000', rtcp_send_port='30000')
+        self.log.debug("Generated Pipeline")
+        self.log.debug(pipeline)
+
+        self.pipeline = Gst.parse_launch(pipeline)
+        self.clock = self.pipeline.get_clock()
 
     def start(self):
         self.log.info('Starting Pipeline')

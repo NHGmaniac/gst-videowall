@@ -1,4 +1,3 @@
-#!/usr/bin/python3
 import gi, signal, logging, sys
 
 # import GStreamer and GLib-Helper classes
@@ -19,29 +18,27 @@ if sys.version_info < minPy:
 # init GObject & Co. before importing local classes
 GObject.threads_init()
 
-# import local classes
-from lib.args import Args
-from lib.pipeline import Pipeline, TCPSource
-from lib.netclock import NetClock
+from lib.netclock import NetClientClock
+from lib.pipeline import RecvPipeline
 from lib.loghandler import LogHandler
-from lib.mainloop import MainLoop
 
 
-# main class
-class SyncStream(object):
+MainLoop = GObject.MainLoop()
+
+class NetRevc(object):
     def __init__(self):
-        self.log = logging.getLogger('SyncStream')
+        self.log = logging.getLogger('NetRecv')
 
         # initialize subsystem
         self.log.debug('creating A/V-Pipeline')
-        self.pipeline = Pipeline()
-        self.source = TCPSource(9999)
-        self.netclock = NetClock(self.pipeline, '0.0.0.0', 8888)
+        self.netclientclock = NetClientClock('127.0.0.1', 8888)
+        self.pipeline = RecvPipeline()
 
     def run(self):
         self.pipeline.configure()
         self.pipeline.start()
-        self.netclock.start()
+        self.netclientclock.start()
+        self.pipeline.setclock(self.netclientclock.clock)
 
         try:
             while True:
@@ -57,17 +54,11 @@ class SyncStream(object):
 # run mainclass
 def main():
     # configure logging
-    docolor = (Args.color == 'always') or (Args.color == 'auto' and sys.stderr.isatty())
+    docolor = sys.stderr.isatty()
 
     handler = LogHandler(docolor)
     logging.root.addHandler(handler)
 
-    if Args.verbose >= 2:
-        level = logging.DEBUG
-    elif Args.verbose == 1:
-        level = logging.INFO
-    else:
-        level = logging.WARNING
     level = logging.DEBUG
 
     logging.root.setLevel(level)
@@ -81,10 +72,10 @@ def main():
 
     # init main-class and main-loop
     logging.debug('initializing SyncStream')
-    syncstream = SyncStream()
+    netrecv = NetRevc()
 
     logging.debug('running SyncStream')
-    syncstream.run()
+    netrecv.run()
 
 
 if __name__ == '__main__':
