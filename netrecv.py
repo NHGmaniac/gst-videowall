@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import gi, signal, logging, sys
 
 # import GStreamer and GLib-Helper classes
@@ -22,19 +23,27 @@ from lib.netclock import NetClientClock
 from lib.pipeline import RecvPipeline
 from lib.loghandler import LogHandler
 
+import subprocess
+
 
 MainLoop = GObject.MainLoop()
 
 class NetRevc(object):
-    def __init__(self):
+    def __init__(self, host, monitor_id, raspi=False):
         self.log = logging.getLogger('NetRecv')
 
         # initialize subsystem
         self.log.debug('creating A/V-Pipeline')
-        self.netclientclock = NetClientClock('127.0.0.1', 8888)
-        self.pipeline = RecvPipeline()
+        self.netclientclock = NetClientClock(host, 10000 + int(monitor_id))
+        self.pipeline = RecvPipeline(host, monitor_id, raspi=raspi)
+        self.host = host
+        self.id = monitor_id
+        self.raspi = raspi
 
     def run(self):
+        if self.raspi:
+            subprocess.call(['mkfifo', 'gst-omx-pipe'])
+            subprocess.Popen(['omxplayer', '--live', '--win', '"0 0 1280 1024"', 'gst-omx-pipe'])
         self.pipeline.configure()
         self.pipeline.start()
         self.netclientclock.start()
@@ -71,8 +80,8 @@ def main():
     logging.info('GStreamer Version: %s', Gst.version())
 
     # init main-class and main-loop
-    logging.debug('initializing SyncStream')
-    netrecv = NetRevc()
+    logging.debug('initializing NetRecv')
+    netrecv = NetRevc('127.0.0.1', 2)
 
     logging.debug('running SyncStream')
     netrecv.run()

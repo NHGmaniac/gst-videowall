@@ -1,15 +1,21 @@
 from gi.repository import GstNet, GObject
+from lib.monitor import MonitorManager
 
 
 class NetClock(object):
-    def __init__(self, pipeline, address, port):
+    def __init__(self, pipeline, address, basePort):
         self.pipeline = pipeline
-        self.netprov = None
+        self.netprov = list()
         self.address = address
-        self.port = port
+        self.basePort = int(basePort)
+        self.mm = MonitorManager()
 
     def start(self):
-        self.netprov = GstNet.NetTimeProvider.new(self.pipeline.pipeline.get_clock(), self.address, self.port)
+        self.mm.load()
+        for monitorid in self.mm.iterids():
+            self.netprov.append(
+                GstNet.NetTimeProvider.new(
+                    self.pipeline.pipeline.get_clock(), self.address, self.basePort + monitorid))
 
 
 class NetClientClock(object):

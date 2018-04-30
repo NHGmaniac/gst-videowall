@@ -54,13 +54,13 @@ class Pipeline(object):
     def __init__(self):
         self.log = logging.getLogger('Pipeline')
         self.mm = MonitorManager()
-        self.mm.load()
         self.speed = "medium"
         self.option_string = "keyint=1"
         self.clock = None
         self.pipeline = None
 
     def configure(self):
+        self.mm.load()
         pipelineTemplate = """
         rtpbin name=rtpbin max-rtcp-rtp-time-diff=50 latency=2000
         
@@ -117,9 +117,9 @@ class Pipeline(object):
                                            speed=self.speed,
                                            option_string=self.option_string,
                                            preview_host="127.0.0.1",
-                                           preview_rtp_port="10000",
-                                           preview_rtcp_send_port="20000",
-                                           preview_rtcp_recv_port="30000",
+                                           preview_rtp_port="11000",
+                                           preview_rtcp_send_port="12000",
+                                           preview_rtcp_recv_port="13000",
                                            offsetlogo=self.mm.getRenderTargetScreen()[0]-420,
                                            logo="nnev.png"
                                            )
@@ -131,9 +131,9 @@ class Pipeline(object):
                                                width=size[0], height=size[1], speed=self.speed,
                                                option_string=self.option_string,
                                                host=self.mm.getMonitor(monitorid).ip,
-                                               rtp_port="{}".format(10000 + monitorid),
-                                               rtcp_send_port="{}".format(20000 + monitorid),
-                                               rtcp_recv_port="{}".format(30000 + monitorid),
+                                               rtp_port="{}".format(11000 + monitorid),
+                                               rtcp_send_port="{}".format(12000 + monitorid),
+                                               rtcp_recv_port="{}".format(13000 + monitorid),
                                                id=monitorid)
 
         self.log.debug("Generated Pipeline")
@@ -156,31 +156,42 @@ class Pipeline(object):
 
 
 class RecvPipeline(object):
-    def __init__(self):
+    def __init__(self, host, monitor_id, raspi=False):
         self.log = logging.getLogger('RecvPipeline')
         self.clock = None
         self.pipeline = None
+        self.id = monitor_id
+        self.host = host
+        self.raspi = raspi
 
     def setclock(self, clock):
         self.clock = clock
         self.pipeline.set_clock(clock)
 
     def configure(self):
+
         pipelineTemplate = """
         rtpbin name=rtpbin
         
         udpsrc caps="application/x-rtp, media=video, clock-rate=90000, encoding-name=H264"
         port={rtp_port} ! rtpbin.recv_rtp_sink_0
         
-        rtpbin. ! rtph264depay ! decodebin ! autovideosink
         
         udpsrc port={rtcp_recv_port} ! rtpbin.recv_rtcp_sink_0
         
         rtpbin.send_rtcp_src_0 ! udpsink port={rtcp_send_port} host={host} sync=false async=false
         """
+        if self.raspi:
+            pipelineTemplate += """
+            rtpbin. ! rtph264depay
+            ! queue flush-on-eos=true max-size-buffers=0 max-size-time=0 max-size-bytes=404857600 ! h264parse 
+            ! mpegtsmux ! filesink buffer-mode=2 location=gst-omx-pipe 
+            """
 
-        pipeline = pipelineTemplate.format(host='127.0.0.1',
-                                           rtp_port='10000', rtcp_recv_port='20000', rtcp_send_port='30000')
+        pipeline = pipelineTemplate.format(host=self.host,
+                                           rtp_port=11000 + self.id,
+                                           rtcp_recv_port=12000 + self.id,
+                                           rtcp_send_port=13000 + self.id)
         self.log.debug("Generated Pipeline")
         self.log.debug(pipeline)
 

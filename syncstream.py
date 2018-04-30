@@ -36,23 +36,30 @@ class SyncStream(object):
         self.log.debug('creating A/V-Pipeline')
         self.pipeline = Pipeline()
         self.source = TCPSource(9999)
-        self.netclock = NetClock(self.pipeline, '0.0.0.0', 8888)
+        self.netclock = NetClock(self.pipeline, '0.0.0.0', 10000)
+        self.do_run = True
 
     def run(self):
         self.pipeline.configure()
         self.pipeline.start()
         self.netclock.start()
-
-        try:
-            while True:
-                self.log.info('running GObject-MainLoop')
-                MainLoop.run()
-        except KeyboardInterrupt:
-            self.log.info('Terminated via Ctrl-C')
+        self.do_run = True
+        self.log.info('running GObject-MainLoop')
+        MainLoop.run()
 
     def quit(self):
+        self.do_run = False
+        self.log.info('stopping Pipeline')
+        self.pipeline.stop()
         self.log.info('quitting GObject-MainLoop')
         MainLoop.quit()
+
+    def reload(self):
+        self.log.info('reloading pipeline')
+        self.pipeline.stop()
+        self.pipeline.configure()
+        self.pipeline.start()
+
 
 # run mainclass
 def main():

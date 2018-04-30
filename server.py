@@ -1,19 +1,23 @@
 #!/usr/bin/python3
-import logging, sys
+import logging, sys, time
 import http.server
 import subprocess
+import threading
 import lib.config as config
 from lib.config import loadconfig
 from lib.loghandler import LogHandler
 from lib.args import Args
 from lib.monitor import MonitorManager
+from syncstream import SyncStream
 macMapping = {}
-hostAddress = "derguhl.de"
+hostAddress = "127.0.0.1"
 
 monitorManager = MonitorManager()
 
 syncstream = None
 conf = None
+stop = False
+t = None
 
 def add_device(mac, ip):
     if monitorManager.hasMonitor(mac):
@@ -22,12 +26,14 @@ def add_device(mac, ip):
     monitorconf["ip"] = ip
     return monitorManager.addMonitor(monitorconf)
 
+
 def startProcess():
     global syncstream
-    monitorManager.save()
     if syncstream:
-        syncstream.kill()
-    syncstream = subprocess.Popen(["./syncstream.py"])
+        syncstream.reload()
+    else:
+        syncstream = SyncStream()
+        syncstream.run()
 
 
 class auto_configure_RequestHandler(http.server.BaseHTTPRequestHandler):
@@ -48,10 +54,8 @@ class auto_configure_RequestHandler(http.server.BaseHTTPRequestHandler):
         if mac not in macMapping.keys():
             self.send_response(418, "I'm a teapot")
             return
-        restart = True
         if monitorManager.hasMonitor(mac):
             print("Client already registered")
-            restart = False
         client_id = add_device(mac, ip)
         if client_id is None:
             self.send_response(418, "I'm a teapot")
@@ -67,16 +71,13 @@ class auto_configure_RequestHandler(http.server.BaseHTTPRequestHandler):
         # Write content as utf-8 data
         self.wfile.write(bytes("{} {}".format(client_id, hostAddress), "utf8"))
 
-        if restart:
-            startProcess()
-
         return
 
 
 def run_server():
     logging.getLogger('ConfigServer').info('starting server...')
 
-    server_address = ("127.0.0.1", 8081)
+    server_address = ("127.0.0.1", 8082)
     httpd = http.server.HTTPServer(server_address, auto_configure_RequestHandler)
 
     logging.getLogger('ConfigServer').info('running server...')
@@ -84,7 +85,7 @@ def run_server():
 
 # run mainclass
 def main():
-    global conf, macMapping, hostAddress
+    global conf, macMapping, hostAddress, t
     # configure logging
     docolor = (Args.color == 'always') or (Args.color == 'auto' and sys.stderr.isatty())
 
@@ -107,8 +108,16 @@ def main():
     hostAddress = conf["hostAddress"]
 
     #start server
-    startProcess()
-    run_server()
+    t = threading.Thread(target=run_server)
+    t.start()
+    while True:
+        time.sleep(2)
+        print("\x1b[2J\x1b[H")
+        monitorManager.load()
+        print('syncstream ready')
+        print('- registered clients -')
+        for mon in monitorManager.monitors:
+            print('{}: {} ({})'.format(mon.index, mon.ip, mon.mac))
 
 if __name__ == '__main__':
     main()

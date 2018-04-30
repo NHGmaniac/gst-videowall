@@ -23,7 +23,7 @@ else
 fi
 
 sh -c "TERM=linux setterm -clear all >/dev/tty0"
-sh -c "TERM=linux echo Hello VideoWall5! | figlet -c -w 150 >/dev/tty0"
+sh -c "TERM=linux echo Hello VideoWall10! | figlet -c -w 150 >/dev/tty0"
 sh -c "TERM=linux hostname -I | figlet -c -w 150 -W >/dev/tty0"
 mac=$(cat /sys/class/net/$(ip route show default | awk '/default/ {print $5}')/address)
 sh -c "TERM=linux echo $mac | figlet -c -w 150 -W >/dev/tty0"
@@ -55,4 +55,4 @@ sh -c "TERM=linux echo ID Assignement Successful >/dev/tty0"
 sh -c "TERM=linux cat /etc/gst-videowall/config >/dev/tty0"
 sleep 10
 sh -c "TERM=linux ./update-dns.sh $(cat /etc/gst-videowall/config) > /dev/tty0"
-./gst-recv-pi.sh $(cat /etc/gst-videowall/config)
+./client.py $(cat /etc/gst-videowall/config)
