@@ -43,7 +43,7 @@ class NetRevc(object):
     def run(self):
         if self.raspi:
             subprocess.call(['mkfifo', 'gst-omx-pipe'])
-            subprocess.Popen(['omxplayer', '--live', '--win', '"0 0 1280 1024"', 'gst-omx-pipe'])
+            subprocess.Popen(['omxplayer', '--live', '--fps 25', '--win', '"0 0 1280 1024"', 'gst-omx-pipe'])
         self.pipeline.configure()
         self.pipeline.start()
         self.netclientclock.start()
