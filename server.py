@@ -10,7 +10,6 @@ from lib.args import Args
 from lib.monitor import MonitorManager
 from syncstream import SyncStream
 macMapping = {}
-hostAddress = "127.0.0.1"
 
 monitorManager = MonitorManager()
 
@@ -70,6 +69,7 @@ class auto_configure_RequestHandler(http.server.BaseHTTPRequestHandler):
         # Send message back to client
         # Write content as utf-8 data
         self.wfile.write(bytes("{} {}".format(client_id, hostAddress), "utf8"))
+        monitorManager.save()
 
         return
 
@@ -77,7 +77,7 @@ class auto_configure_RequestHandler(http.server.BaseHTTPRequestHandler):
 def run_server():
     logging.getLogger('ConfigServer').info('starting server...')
 
-    server_address = ("127.0.0.1", 8082)
+    server_address = ("10.128.9.47", 8082)
     httpd = http.server.HTTPServer(server_address, auto_configure_RequestHandler)
 
     logging.getLogger('ConfigServer').info('running server...')

@@ -1,7 +1,5 @@
 #!/usr/bin/python3
 from netrecv import NetRevc
-import requests
-import time
 import sys
 
 raspi = True
