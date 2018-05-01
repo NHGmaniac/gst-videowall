@@ -54,5 +54,5 @@ done
 sh -c "TERM=linux echo ID Assignement Successful >/dev/tty0"
 sh -c "TERM=linux cat /etc/gst-videowall/config >/dev/tty0"
 sleep 10
-sh -c "TERM=linux ./update-dns.sh $(cat /etc/gst-videowall/config) > /dev/tty0"
+#sh -c "TERM=linux ./update-dns.sh $(cat /etc/gst-videowall/config) > /dev/tty0"
 ./client.py $(cat /etc/gst-videowall/config)
