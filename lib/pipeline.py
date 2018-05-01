@@ -70,7 +70,7 @@ class Pipeline(object):
         ! queue max-size-time=0 max-size-buffers=0 max-size-bytes=173741274 min-threshold-bytes=1000000
         ! videoconvert
         ! videoscale
-        ! capsfilter caps="video/x-raw, width={width}, height={height}"
+        ! capsfilter caps="video/x-raw, width={width}, height={height}, framerate=25/1"
         ! textoverlay text="github.com/\r\nNHGmaniac/\r\ngst-videowall" valignment=top halignment=left xpad=100 ypad=100 font-desc="Sans, 12" shaded-background=yes
         ! tee name=t     
         

@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-import logging, sys, time
+import logging, sys, time, shutil
 import http.server
 import subprocess
 import threading
@@ -17,6 +17,8 @@ syncstream = None
 conf = None
 stop = False
 t = None
+
+clearOnStart = True
 
 def add_device(mac, ip):
     if monitorManager.hasMonitor(mac):
@@ -110,6 +112,8 @@ def main():
     #start server
     t = threading.Thread(target=run_server)
     t.start()
+    if clearOnStart:
+        shutil.rmtree("./config")
     while True:
         time.sleep(2)
         print("\x1b[2J\x1b[H")
