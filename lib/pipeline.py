@@ -185,7 +185,7 @@ class RecvPipeline(object):
             pipelineTemplate += """
             rtpbin. ! rtph264depay
             ! queue flush-on-eos=true max-size-buffers=0 max-size-time=0 max-size-bytes=404857600 ! h264parse 
-            ! mpegtsmux ! filesink buffer-mode=2 location=gst-omx-pipe 
+            ! mpegtsmux ! filesink location=gst-omx-pipe 
             """
 
         pipeline = pipelineTemplate.format(host=self.host,
