@@ -28,6 +28,7 @@ class TCPSource(TCPSingleConnection):
         fdsrc fd={fd} blocksize=1048576
         ! queue
         ! matroskademux name=demux
+        ! decodebin
         ! intervideosink channel=video
         """
         self.pipeline = Gst.parse_launch(pipeline.format(fd=self.fd))
@@ -66,7 +67,6 @@ class Pipeline(object):
         
 
         intervideosrc channel=video
-        ! decodebin
         ! queue max-size-time=0 max-size-buffers=0 max-size-bytes=173741274 min-threshold-bytes=1000000
         ! videoconvert
         ! videoscale
@@ -186,6 +186,10 @@ class RecvPipeline(object):
             rtpbin. ! rtph264depay
             ! queue flush-on-eos=true max-size-buffers=0 max-size-time=0 max-size-bytes=404857600 ! h264parse 
             ! mpegtsmux ! filesink location=gst-omx-pipe 
+            """
+        else:
+            pipelineTemplate += """
+            rtpbin. ! decodebin ! autovideosink
             """
 
         pipeline = pipelineTemplate.format(host=self.host,
