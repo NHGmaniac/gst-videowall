@@ -4,7 +4,7 @@ import sys, logging
 
 from lib.loghandler import LogHandler
 
-raspi = False
+raspi = True
 
 def main():
     # configure logging
