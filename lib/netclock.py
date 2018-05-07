@@ -21,10 +21,11 @@ class NetClock(object):
             self.log.debug('new netclock on port {}'.format(self.basePort + monitorid))
             clock_prov = GstNet.NetTimeProvider.new(
                     self.pipeline.pipeline.get_clock(), self.address, self.basePort + monitorid)
-            base_time = self.pipeline.get_clock().get_time()
+            base_time = self.pipeline.pipeline.get_clock().get_time()
             self.pipeline.pipeline.set_start_time(Gst.CLOCK_TIME_NONE)
             self.pipeline.pipeline.set_base_time(base_time)
             self.netprov.append((clock_prov, base_time))
+            self.log.debug('base time is {}'.format(base_time))
 
 
 class NetClientClock(object):
