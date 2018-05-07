@@ -1,22 +1,45 @@
 #!/usr/bin/python3
-import logging, sys, time, shutil
+import logging, sys, time, shutil, signal
 import http.server
-import subprocess
 import threading
-import lib.config as config
+import gi
+
+
+# import GStreamer and GLib-Helper classes
+gi.require_version('Gst', '1.0')
+from gi.repository import Gst, GObject, GstNet
+
+# check min-version
+minGst = (1, 0)
+minPy = (3, 0)
+
+Gst.init([])
+if Gst.version() < minGst:
+    raise Exception("GStreamer version", Gst.version(), 'is too old, at least', minGst, 'is required')
+
+if sys.version_info < minPy:
+    raise Exception("Python version", sys.version_info, 'is too old, at least', minPy, 'is required')
+
+# init GObject & Co. before importing local classes
+GObject.threads_init()
+
 from lib.config import loadconfig
-from lib.loghandler import LogHandler
 from lib.args import Args
 from lib.monitor import MonitorManager
-from syncstream import SyncStream
+from lib.pipeline import Pipeline, TCPSource
+from lib.netclock import NetClock
+from lib.loghandler import LogHandler
+from lib.mainloop import MainLoop
 macMapping = {}
 
 monitorManager = MonitorManager()
 
-syncstream = None
+
 conf = None
 stop = False
 t = None
+ready = False
+ncdict = None
 
 clearOnStart = True
 
@@ -25,16 +48,8 @@ def add_device(mac, ip):
         return monitorManager.replaceMonitor(mac, ip)
     monitorconf = macMapping[mac]
     monitorconf["ip"] = ip
+    monitorconf["mac"] = mac
     return monitorManager.addMonitor(monitorconf)
-
-
-def startProcess():
-    global syncstream
-    if syncstream:
-        syncstream.reload()
-    else:
-        syncstream = SyncStream()
-        syncstream.run()
 
 
 class auto_configure_RequestHandler(http.server.BaseHTTPRequestHandler):
@@ -62,15 +77,18 @@ class auto_configure_RequestHandler(http.server.BaseHTTPRequestHandler):
             self.send_response(418, "I'm a teapot")
             return
 
-        self.send_response(200, "OK")
+        if ready:
+            self.send_response(200, "OK")
 
-        # Send headers
-        self.send_header('Content-type', 'text/html')
-        self.end_headers()
+            # Send headers
+            self.send_header('Content-type', 'text/html')
+            self.end_headers()
 
-        # Send message back to client
-        # Write content as utf-8 data
-        self.wfile.write(bytes("{} {}".format(client_id, hostAddress), "utf8"))
+            # Send message back to client
+            # Write content as utf-8 data
+            self.wfile.write(bytes("{} {} {}".format(client_id, hostAddress, ncdict[client_id][1]), "utf8"))
+        else:
+            self.send_response(418, 'not ready')
         monitorManager.save()
 
         return
@@ -87,7 +105,7 @@ def run_server():
 
 # run mainclass
 def main():
-    global conf, macMapping, hostAddress, t
+    global conf, macMapping, hostAddress, t, ready, ncdict
     # configure logging
     docolor = (Args.color == 'always') or (Args.color == 'auto' and sys.stderr.isatty())
 
@@ -104,6 +122,9 @@ def main():
 
     logging.root.setLevel(level)
 
+
+
+
     #load config
     conf = loadconfig("config.json")
     macMapping = conf["macMapping"]
@@ -113,15 +134,38 @@ def main():
     t = threading.Thread(target=run_server)
     t.start()
     if clearOnStart:
-        shutil.rmtree("./config")
-    while True:
-        time.sleep(2)
-        print("\x1b[2J\x1b[H")
-        monitorManager.load()
-        print('syncstream ready')
-        print('- registered clients -')
-        for mon in monitorManager.monitors:
-            print('{}: {} ({})'.format(mon.index, mon.ip, mon.mac))
+        try:
+            shutil.rmtree("./config")
+        except FileNotFoundError:
+            pass
+    while not ready:
+        try:
+            time.sleep(2)
+            print("\x1b[2J\x1b[H")
+            monitorManager.load()
+            print('syncstream ready')
+            print('- registered clients -')
+            for mon in monitorManager.monitors:
+                print('{}: {} ({})'.format(mon.index, mon.ip, mon.mac))
+            print('press ctrl+c to start')
+        except KeyboardInterrupt:
+            print('Starting!')
+            # make killable by ctrl-c
+            logging.debug('setting SIGINT handler')
+            signal.signal(signal.SIGINT, signal.SIG_DFL)
+            # init main-class and main-loop
+            logging.debug('Creating Pipeline')
+            pipeline = Pipeline()
+            source = TCPSource(9999)
+            netclock = NetClock(pipeline, None, 10000)
+            pipeline.configure()
+            pipeline.start()
+            netclock.start()
+            ncdict = netclock.netprov
+            ready = True
+            logging.info('running GObject MainLoop')
+            MainLoop.run()
+
 
 if __name__ == '__main__':
     main()

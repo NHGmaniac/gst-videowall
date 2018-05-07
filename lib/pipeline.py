@@ -51,6 +51,8 @@ class TCPSource(TCPSingleConnection):
             self.disconnect()
 
 
+
+
 class Pipeline(object):
     def __init__(self):
         self.log = logging.getLogger('Pipeline')

@@ -6,7 +6,7 @@ import logging
 class NetClock(object):
     def __init__(self, pipeline, address, basePort):
         self.pipeline = pipeline
-        self.netprov = list()
+        self.netprov = dict()
         self.address = address
         self.basePort = int(basePort)
         self.mm = MonitorManager()
@@ -24,7 +24,7 @@ class NetClock(object):
             base_time = self.pipeline.pipeline.get_clock().get_time()
             self.pipeline.pipeline.set_start_time(Gst.CLOCK_TIME_NONE)
             self.pipeline.pipeline.set_base_time(base_time)
-            self.netprov.append((clock_prov, base_time))
+            self.netprov[monitorid] = (clock_prov, base_time)
             self.log.debug('base time is {}'.format(base_time))
 
 
