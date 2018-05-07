@@ -44,7 +44,7 @@ class NetRevc(object):
     def run(self):
         if self.raspi:
             subprocess.call(['mkfifo', 'gst-omx-pipe'])
-            subprocess.Popen(['omxplayer', '--live', '--win', '"0 0 1280 1024"', '--aspect-mode stretch', 'gst-omx-pipe'])
+            subprocess.Popen(['omxplayer', '--live', '--win', '"0 0 1280 1024"', '--aspect-mode', 'stretch', 'gst-omx-pipe'])
         self.pipeline.configure()
         self.pipeline.pipeline.set_start_time(Gst.CLOCK_TIME_NONE)
         self.pipeline.pipeline.set_base_time(self.base_time)
