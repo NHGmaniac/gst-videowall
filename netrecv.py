@@ -29,25 +29,29 @@ import subprocess
 MainLoop = GObject.MainLoop()
 
 class NetRevc(object):
-    def __init__(self, host, monitor_id, raspi=False):
+    def __init__(self, host, monitor_id, raspi=False, base_time=None):
         self.log = logging.getLogger('NetRecv')
 
         # initialize subsystem
         self.log.debug('creating A/V-Pipeline')
-        self.netclientclock = NetClientClock(host, 10000 + int(monitor_id))
         self.pipeline = RecvPipeline(host, monitor_id, raspi=raspi)
+        self.netclientclock = None
         self.host = host
         self.id = monitor_id
         self.raspi = raspi
+        self.base_time = base_time
 
     def run(self):
         if self.raspi:
             subprocess.call(['mkfifo', 'gst-omx-pipe'])
             subprocess.Popen(['omxplayer', '--live', '--win', '"0 0 1280 1024"', 'gst-omx-pipe'])
         self.pipeline.configure()
-        self.pipeline.start()
+        self.pipeline.pipeline.set_start_time(Gst.CLOCK_TIME_NONE)
+        self.pipeline.pipeline.set_base_time(self.base_time)
+        self.netclientclock = NetClientClock(self.host, 10000 + int(self.id), self.base_time)
         self.netclientclock.start()
         self.pipeline.setclock(self.netclientclock.clock)
+        self.pipeline.start()
 
         try:
             while True:

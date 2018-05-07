@@ -55,7 +55,7 @@ class Pipeline(object):
     def __init__(self):
         self.log = logging.getLogger('Pipeline')
         self.mm = MonitorManager()
-        self.speed = "medium"
+        self.speed = "ultrafast"
         self.option_string = "keyint=1"
         self.clock = None
         self.pipeline = None

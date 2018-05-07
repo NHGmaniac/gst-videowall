@@ -36,7 +36,7 @@ class SyncStream(object):
         self.log.debug('creating A/V-Pipeline')
         self.pipeline = Pipeline()
         self.source = TCPSource(9999)
-        self.netclock = NetClock(self.pipeline, '0.0.0.0', 10000)
+        self.netclock = NetClock(self.pipeline, None, 10000)
         self.do_run = True
 
     def run(self):

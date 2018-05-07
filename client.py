@@ -4,7 +4,7 @@ import sys, logging
 
 from lib.loghandler import LogHandler
 
-raspi = True
+raspi = False
 
 def main():
     # configure logging
@@ -19,7 +19,7 @@ def main():
 
     # init main-class and main-loop
     logging.debug('initializing NetRecv')
-    n = NetRevc(host=sys.argv[2], monitor_id=int(sys.argv[1]), raspi=raspi)
+    n = NetRevc(host=sys.argv[2], monitor_id=int(sys.argv[1]), raspi=raspi, base_time=sys.argv[3])
     n.run()
 
 
