@@ -53,6 +53,6 @@ until curl -f https://videowall.derguhl.de/$mac/$(hostname -I | awk '{print $1}'
 done
 sh -c "TERM=linux echo ID Assignement Successful >/dev/tty0"
 sh -c "TERM=linux cat /etc/gst-videowall/config >/dev/tty0"
-sleep 10
+sleep 2
 #sh -c "TERM=linux ./update-dns.sh $(cat /etc/gst-videowall/config) > /dev/tty0"
 ./client.py $(cat /etc/gst-videowall/config)
