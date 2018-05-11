@@ -186,7 +186,7 @@ class RecvPipeline(object):
         if self.raspi:
             pipelineTemplate += """
             rtpbin. ! rtph264depay
-            ! queue flush-on-eos=true max-size-buffers=0 max-size-time=0 max-size-bytes=404857600 min-threshold-bytes=20000000 ! h264parse 
+            ! queue flush-on-eos=true max-size-buffers=0 max-size-time=0 max-size-bytes=404857600 min-threshold-bytes=5000000 ! h264parse 
             ! mpegtsmux ! filesink location=gst-omx-pipe 
             """
         else:
