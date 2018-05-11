@@ -40,6 +40,7 @@ stop = False
 t = None
 ready = False
 ncdict = None
+pipeline = None
 
 clearOnStart = True
 
@@ -86,7 +87,7 @@ class auto_configure_RequestHandler(http.server.BaseHTTPRequestHandler):
 
             # Send message back to client
             # Write content as utf-8 data
-            self.wfile.write(bytes("{} {} {}".format(client_id, hostAddress, ncdict[client_id][1]), "utf8"))
+            self.wfile.write(bytes("{} {} {}".format(client_id, hostAddress, pipeline.pipeline.get_clock().get_time()), "utf8"))
         else:
             self.send_response(418, 'not ready')
         monitorManager.save()
@@ -105,7 +106,7 @@ def run_server():
 
 # run mainclass
 def main():
-    global conf, macMapping, hostAddress, t, ready, ncdict
+    global conf, macMapping, hostAddress, t, ready, ncdict, pipeline
     # configure logging
     docolor = (Args.color == 'always') or (Args.color == 'auto' and sys.stderr.isatty())
 
