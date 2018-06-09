@@ -6,7 +6,7 @@ rtp_port=$(echo "10000 + $id" | bc)
 rtcp_send_port=$(echo "30000 + $id" | bc)
 rtcp_recv_port=$(echo "20000 + $id" | bc)
 mkfifo gst-omx-pipe
-while true; do \
+#while true; do \
 omxplayer --live --win "0 0 1280 1024" gst-omx-pipe &
 gst-launch-1.0 rtpbin name=rtpbin max-rtcp-rtp-time-diff=50 latency=2000 \
 	udpsrc caps="application/x-rtp,media=(string)video,clock-rate=(int)90000,encoding-name=(string)H264" \
@@ -14,6 +14,6 @@ gst-launch-1.0 rtpbin name=rtpbin max-rtcp-rtp-time-diff=50 latency=2000 \
         rtpbin. ! rtph264depay ! queue flush-on-eos=true max-size-buffers=0 max-size-time=0 max-size-bytes=404857600 ! h264parse ! mpegtsmux ! filesink buffer-mode=2 location=gst-omx-pipe  \
 	udpsrc port=$rtcp_recv_port ! rtpbin.recv_rtcp_sink_0 \
 	rtpbin.send_rtcp_src_0 ! udpsink port=$rtcp_send_port host=$host sync=false async=false
-	sleep 2
-	done
+#	sleep 2
+#	done
 

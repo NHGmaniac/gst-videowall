@@ -45,14 +45,15 @@ fi
 
 sh -c "TERM=linux echo Setup Completed | figlet -c -w 150 >/dev/tty0"
 
-
-until curl -f https://videowall.derguhl.de/$mac/$(hostname -I | awk '{print $1}') -o /etc/gst-videowall/config; do
-    mac=$(cat /sys/class/net/$(ip route show default | awk '/default/ {print $5}')/address)
-    sh -c "TERM=linux echo ID Assignement Failed, retrying... >/dev/tty0"
-    sleep 10
+while true; do 
+	until curl -f https://videowall.derguhl.de/$mac/$(hostname -I | awk '{print $1}') -o /etc/gst-videowall/config; do
+	    mac=$(cat /sys/class/net/$(ip route show default | awk '/default/ {print $5}')/address)
+	    sh -c "TERM=linux echo ID Assignement Failed, retrying... >/dev/tty0"
+	    sleep 10
+	done
+	sh -c "TERM=linux echo ID Assignement Successful >/dev/tty0"
+	sh -c "TERM=linux cat /etc/gst-videowall/config >/dev/tty0"
+	sleep 2
+	#sh -c "TERM=linux ./update-dns.sh $(cat /etc/gst-videowall/config) > /dev/tty0"
+	./client.py $(cat /etc/gst-videowall/config)
 done
-sh -c "TERM=linux echo ID Assignement Successful >/dev/tty0"
-sh -c "TERM=linux cat /etc/gst-videowall/config >/dev/tty0"
-sleep 2
-#sh -c "TERM=linux ./update-dns.sh $(cat /etc/gst-videowall/config) > /dev/tty0"
-./client.py $(cat /etc/gst-videowall/config)
